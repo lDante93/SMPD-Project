@@ -5,15 +5,12 @@ must implement create FNew!!!!!!!
 
 import Jama.Matrix;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 public class Fisher {
 
     private PR_GUI gui;
     private ArrayList<int[]> combspairs = new ArrayList<int[]>();
-    private double[][] filteredF;
-    private LinkedHashMap<Integer, Double> filteredFeatures = new LinkedHashMap<Integer, Double>();
 
     public Fisher(PR_GUI gui) {
         this.gui = gui;
@@ -71,11 +68,10 @@ public class Fisher {
     }
 
     private void BruteForce(int d) {
-        filterFeatures(64);//filter and clears previous arrays
         combspairs.clear();         //delete previous pairs
 
         int[] combinations = new int[d];//declares an combination array, for example if d==2, then its [0,0]
-
+    
         getCombs(gui.getFeatureCount(), d, combinations, d);   //return all pairs to combspairs array
 
         double maxFisher = 0, temp;
@@ -83,18 +79,17 @@ public class Fisher {
         for (int[] pair : combspairs) {//the purpose of this loop is to make from for example array[5,6] an array of [objects of 5th feature, objects of 6th feature]; 
             ArrayList<double[]> vecs = new ArrayList<double[]>();
             for (int i = 0; i < pair.length; i++) {
-                vecs.add(filteredF[pair[i] - 1]);//vec is an array for example[x,y], where x and y is an another array of an objects of selected feature
+                vecs.add(gui.F[pair[i] - 1]);//vec is an array for example[x,y], where x and y is an another array of an objects of selected feature
             }
             if ((temp = computeFisherBruteForceND(vecs)) > maxFisher) {//it will give the higheest computed fisher and a pair
                 maxFisher = temp;
                 winnerPair = pair; //winner pair is the for example 2 dimension selected: a pair [1,3]
             }
         }
-        Object[] originalFeatures = filteredFeatures.keySet().toArray();
 
         String winners = "";
         for (int pair : winnerPair) {
-            winners += originalFeatures[pair - 1] + " (" + pair + "), \n";
+            winners += " (" + pair + "), \n";
         }
         gui.getjTextArea1().setText(winners);
         gui.getl_FLD_val().setText(maxFisher + "");
@@ -168,7 +163,6 @@ public class Fisher {
     }
 
     private void SFS(int d) {
-        filterFeatures(64);//filter and clears previous arrays
         combspairs.clear();         //delete previous pairs
         double[] set = new double[d];//declares an array of the given dimension
         int[] winner = null;//declares an array of the winner set
@@ -204,10 +198,10 @@ public class Fisher {
                 winnerSet = pair;
             }
         }
-        Object[] originalFeatures = filteredFeatures.keySet().toArray();
+      
         String winners = "";
         for (int winner : winnerSet) {
-            winners += originalFeatures[winner - 1] + " (" + winner + "), \n";
+            winners += " (" + winner + "), \n";
         }
         gui.getjTextArea1().setText(winners);
         gui.getl_FLD_val().setText(maxFisher + "");
@@ -221,35 +215,6 @@ public class Fisher {
             }
         }
         return false;
-    }
-
-    private void filterFeatures(int d) {
-
-        filteredFeatures.clear(); //clears the the hashmap
-        filteredF = new double[d][]; //creates an array with 64 rows
-        for (int i = 0; i < gui.getFeatureCount(); i++) {
-            filteredFeatures.put(i, computeFisher1D(gui.getF()[i]));//puts into the hashmap computed fisher, for example: 0=0.98 1=0.1
-        }
-
-        for (int i = 0; i < gui.getFeatureCount() - d; i++) { //to jest niewazne, pytanie czy usuwamy
-            Integer minKey = filteredFeatures.entrySet().iterator().next().getKey();
-            double minVal = filteredFeatures.get(minKey);
-
-            for (Integer key : filteredFeatures.keySet()) {
-                if (filteredFeatures.get(key) < minVal) {
-                    minKey = key;
-                    minVal = filteredFeatures.get(key);
-                }
-            }
-            filteredFeatures.remove(minKey);
-        }
-        int i = 0;
-        for (Integer key : filteredFeatures.keySet()) {
-
-            filteredF[i] = gui.getF()[key]; //before filteredF was null, after this every filteredF[i] is F[i] (so it's an array of features)
-            i++;
-        }
-
     }
 
     private void getCombs(int n, int rest, int[] pairs, int k) { //it makes an array of cobinations, for example if dimension=rest=2 it makes first[5,6] array, then [4,6] etc.. then [4,5], [3,5]

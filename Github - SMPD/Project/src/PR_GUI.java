@@ -40,6 +40,7 @@ public class PR_GUI extends javax.swing.JFrame {
     private Fisher fisher;
     
     
+    
     /** Creates new form PR_GUI */
     public PR_GUI() {
         
@@ -753,8 +754,8 @@ public class PR_GUI extends javax.swing.JFrame {
         public double[][] getFNew(){
       return FNew;
   }    
-   public void setFNew(int f) {
-      FeatureCount = f;
+   public void setFNew(double[][] f) {
+      FNew = f;
   }
         
         

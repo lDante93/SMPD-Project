@@ -1,16 +1,17 @@
 
 /*
 must implement create FNew!!!!!!!
-*/
-
+ */
 import Jama.Matrix;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 public class Fisher {
 
     private PR_GUI gui;
     private ArrayList<int[]> combspairs = new ArrayList<int[]>();
+    private double[][] FNew2;
 
     public Fisher(PR_GUI gui) {
         this.gui = gui;
@@ -33,14 +34,21 @@ public class Fisher {
     private void Fisher1D() {
         double FLD = 0, tmp; //fisher linear discriminant
         int max_ind = -1;
+        FNew2 = new double[1][gui.getFeatureCount()];
         for (int i = 0; i < gui.getFeatureCount(); i++) { //FeatureCount is number of 64 features (for maple oak)
+            //  System.out.println("F"    +Arrays.toString(gui.getF()[i]));
+
             if ((tmp = computeFisher1D(gui.getF()[i])) > FLD) //F[i] is an array that have values of one of the feature (perpendicularly column in the notepad)
             { //if computed fisher1d for a f[i]  is greater than FLD, then is set as tmp (for example for maple oak it will be the fifth feature that is greater than first feature)
+
+                FNew2[0] = gui.getF()[i];
 
                 FLD = tmp;
                 max_ind = i;
             }
         }
+
+        gui.setFNew(FNew2);
         gui.getjTextArea1().setText(max_ind + ""); //it shows the index of the best fisher (but it counts from 0 , so the last feature of the 64elements could be 63)
         gui.getl_FLD_val().setText(FLD + ""); //it shows the best computed fisher (the highest)
     }
@@ -71,21 +79,32 @@ public class Fisher {
         combspairs.clear();         //delete previous pairs
 
         int[] combinations = new int[d];//declares an combination array, for example if d==2, then its [0,0]
-    
+
         getCombs(gui.getFeatureCount(), d, combinations, d);   //return all pairs to combspairs array
 
         double maxFisher = 0, temp;
+        FNew2 = new double[d][gui.getFeatureCount()];
         int[] winnerPair = new int[d]; //declares a winner array, for example if d==2, then its [0,0]
         for (int[] pair : combspairs) {//the purpose of this loop is to make from for example array[5,6] an array of [objects of 5th feature, objects of 6th feature]; 
             ArrayList<double[]> vecs = new ArrayList<double[]>();
             for (int i = 0; i < pair.length; i++) {
                 vecs.add(gui.F[pair[i] - 1]);//vec is an array for example[x,y], where x and y is an another array of an objects of selected feature
+
             }
+
             if ((temp = computeFisherBruteForceND(vecs)) > maxFisher) {//it will give the higheest computed fisher and a pair
                 maxFisher = temp;
                 winnerPair = pair; //winner pair is the for example 2 dimension selected: a pair [1,3]
+               
             }
+
         }
+
+        for (int i = 0; i < d; i++) {
+            FNew2[i] = gui.getF()[winnerPair[i] - 1];
+        }
+
+        gui.setFNew(FNew2);
 
         String winners = "";
         for (int pair : winnerPair) {
@@ -191,14 +210,22 @@ public class Fisher {
             ArrayList<double[]> vecs = new ArrayList<double[]>();
             for (int i = 0; i < pair.length; i++) {
                 vecs.add(gui.getF()[pair[i] - 1]);
+
             }
 
             if ((temp = computeFisherBruteForceND(vecs)) > maxFisher) {
                 maxFisher = temp;
                 winnerSet = pair;
+
             }
         }
-      
+        FNew2 = new double[d][gui.getFeatureCount()];
+        for (int i = 0; i < d; i++) {
+            FNew2[i] = gui.getF()[winnerSet[i] - 1];
+        }
+
+        gui.setFNew(FNew2);
+
         String winners = "";
         for (int winner : winnerSet) {
             winners += " (" + winner + "), \n";

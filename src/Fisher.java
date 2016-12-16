@@ -112,6 +112,8 @@ public class Fisher {
         }
         gui.getjTextArea1().setText(winners);
         gui.getl_FLD_val().setText(maxFisher + "");
+        
+    
     }
 
     private double computeFisherBruteForceND(ArrayList<double[]> vecs) {
@@ -265,4 +267,5 @@ public class Fisher {
 
         }
     }
+    
 }

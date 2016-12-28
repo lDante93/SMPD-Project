@@ -37,13 +37,14 @@ public abstract class abstractClassifier {
    } 
    
 /**
- * Classifies the samples that are marked as a test set from all classes.
+ * Classifies all the samples that are marked as a test set from all classes.
  * Input data must be parsed and trained.
  */   
     public void classifySamples(){
         pr_gui.clearClassifier();
+        setCenterPoints(); //ONLY USED IN KNM
         boolean [] classification = new boolean [getTrainCount()]; int n=0;
-        for (int j=0;j<pr_gui.getClassCount();j++){ //check for this class
+        for (int j=0;j<pr_gui.getClassCount();j++){ //check from this class
             for (int i=0; i < trainOrTestSet[j].length; i++){ //check of this sample,
                 int flag=-1, classifiedClass=flag;
                 classifiedClass = classifyTestSet(i,j, flag);
@@ -53,6 +54,12 @@ public abstract class abstractClassifier {
             } 
        }
        printAccOfClassification(classification); //Acc accuracy
+    }
+    
+    /**
+     * used only in kNM - makes possible to set the center points of clusters.
+     */
+    protected void setCenterPoints(){
     }
        
        /**
@@ -79,17 +86,32 @@ public abstract class abstractClassifier {
         pr_gui.setClassifierAcc(Integer.toString((int)y));
     }
     
+   /**
+    * Prints the classification of the current sample in pr_gui
+    * @param classifiedClass class to which the sample is classified
+    * @param sampleNo number of sample
+    * @param checkedClass true class of sample
+    */
     protected void printClassifiedClass(int classifiedClass,int sampleNo,int checkedClass){
         String nextClassifiedClass = classifiedClass+"("+sampleNo+","+checkedClass+"), ";
         pr_gui.addClassifyClasses(nextClassifiedClass);
         pr_gui.addClassifyLine(nextClassifiedClass);
     }
+   
     
+    /**
+     * Classifies one specified sample to the class to which distance is the shortest.
+     * Prints the classification on the console in pr_gui.
+     * @param sampleNo number of sample to which distance is classified
+     * @param checkedClass class to which belongs the test sample
+     * @param flag flag if no classification took place
+     * @return classification of the sample to the class
+     */
     protected int classifyTestSet(int sampleNo, int checkedClass, int flag){
         int Classification =flag; //class, 
         double classDist = Math.pow(100, 1000); //distance
         if (!isTrainSet(checkedClass,sampleNo)){ 
-            for(int j=0; j < pr_gui.getClassCount();j++){   
+            for(int j=0; j < pr_gui.getClassCount();j++){   //for classes
                 
                 double currClassDist= getClassDistance(sampleNo, j, checkedClass); 
                 if (currClassDist < classDist){
@@ -103,6 +125,13 @@ public abstract class abstractClassifier {
         return Classification;
     }
     
+    /**
+     * Determines the minimum distance of the specified class and specified test sample
+     * @param sampNo number of sample
+     * @param sampClass number of class
+     * @param checkClass class to which distance is computed
+     * @return minimum distance of the spec. sample to the spec. class
+     */
     protected double getClassDistance(int sampNo, int sampClass, int checkClass){
         double minDist = Math.pow(100, 100);
         for (int checkNo = 0; checkNo < SplitData[sampClass][0].length; checkNo++){ //count of samples in class
@@ -120,13 +149,24 @@ public abstract class abstractClassifier {
         return minDist;
     }
     
+    /**
+     * Checks if the currently checked training sample is not in fact this sample
+     * @param sampClass true class of samle
+     * @param checkClass class that is now checked
+     * @param sampNo true number of sample
+     * @param checkNo number of sample now checked
+     * @return 
+     */
     protected boolean notCheckingSample(int sampClass,int checkClass,int sampNo,int checkNo){
         if( sampClass==checkClass && sampNo==checkNo){
             return false;
         } else return true;
     }
    
-    
+    /**
+     * Computes the training count
+     * @return the amount of training samples
+     */
     private int getTrainCount(){
         int count= 0;
         for (int j=0; j < pr_gui.getClassCount();j++){
@@ -136,7 +176,12 @@ public abstract class abstractClassifier {
         }
         return count;
     }
-    
+    /**
+     * Computes an Euklides between the training and test sample in specified class
+     * @param CurrFeatureSet feature set of training sample
+     * @param checkPoint feature set of test sample
+     * @return distance between the two points (test and training)
+     */
     protected double makeEuklides(double[] CurrFeatureSet, double[] checkPoint){
         double sumOfSquares =0;
         for (int feature=0;feature<CurrFeatureSet.length;feature++){
@@ -145,7 +190,12 @@ public abstract class abstractClassifier {
         }
         return Math.sqrt(sumOfSquares);
     }
-
+/**
+ * checks if the sample checked is in training set
+ * @param checkedClass class of checked sample
+ * @param sample number of checked sample
+ * @return 
+ */
     protected boolean isTrainSet(int checkedClass, int sample){
         if(trainOrTestSet[checkedClass][sample] < 1){ 
             return true;

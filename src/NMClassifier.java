@@ -25,14 +25,14 @@ public class NMClassifier extends abstractClassifier{
         for (int checkNo = 0; checkNo < SplitData[sampClass][0].length; checkNo++){ //count of samples in class
             if (isTrainSet(checkClass,checkNo)&& notCheckingSample(sampClass,checkClass,sampNo,checkNo)){
                 currSampleCount++; 
-                for (int i = 0; i<pr_gui.getFeatureCount(); i++){
+                for (int i = 0; i<SplitData[0].length; i++){ //to feature count
                     currFeatureSet[i] += SplitData[sampClass][i][checkNo];
                     checkPoint[i] = SplitData[sampClass][i][sampNo];
                 }
             }
         }
         
-        for (int i = 0; i<pr_gui.getFeatureCount(); i++){ 
+        for (int i = 0; i<SplitData[0].length; i++){ 
                     meanFeatureSet[i] = currFeatureSet[i]/currSampleCount; //generate the mean of features for the class
                     checkPoint[i] = SplitData[sampClass][i][sampNo]; //generate sample to be checked [features]
                 }

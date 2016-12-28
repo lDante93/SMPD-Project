@@ -15,10 +15,15 @@ public abstract class abstractClassifier {
    static double[][][] SplitData; //data splits into classes (first ind is class) class/faetures/samples
    static int[] ClassLabels;
    static final int TRAIN_SET=0, TEST_SET=1;
-   static int[][] trainOrTestSet; //class, trainOrTest(0,1)
+   static int[][] trainOrTestSet; //[class], [trainOrTest(0,1)]
     PR_GUI pr_gui = new PR_GUI();
    Random generator = new Random();  
-
+   
+   
+/**
+ * counts samples in class
+ * @return 
+ */
    public int getMaxSamplesInClass(){
        int maxSamples=0;
        for (int i=0;  i<pr_gui.ClassCount;i++){
@@ -42,7 +47,7 @@ public abstract class abstractClassifier {
             for (int i=0; i < trainOrTestSet[j].length; i++){ //check of this sample,
                 int flag=-1, classifiedClass=flag;
                 classifiedClass = classifyTestSet(i,j, flag);
-                if(classifiedClass!=flag){
+                if(classifiedClass!=flag){ //if is flag then ignore result
                 classification[n++] = checkClassifiedSet(j,classifiedClass);
                 }
             } 
@@ -50,13 +55,21 @@ public abstract class abstractClassifier {
        printAccOfClassification(classification); //Acc accuracy
     }
        
-       
+       /**
+        * checks if the class of the test sample is a class of the classification
+        * @param currentClass true class of sample
+        * @param classifiedClass class to which sample is classified
+        * @return 
+        */
      private boolean checkClassifiedSet(int currentClass, int classifiedClass){
         if(currentClass == classifiedClass){
             return true;
         } else return false;
     }
-    
+   /**
+    * prints accuracy of classification to gui
+    * @param classification set of good/bad guesses
+    */
    private void printAccOfClassification (boolean[] classification){
         int goodGuess=0;
         for (int i=0; i<classification.length;i++){
@@ -94,11 +107,11 @@ public abstract class abstractClassifier {
         double minDist = Math.pow(100, 100);
         for (int checkNo = 0; checkNo < SplitData[sampClass][0].length; checkNo++){ //count of samples in class
             if (isTrainSet(checkClass,checkNo)&& notCheckingSample(sampClass,checkClass,sampNo,checkNo)){
-                double[] currFeatureSet = new double[pr_gui.getFeatureCount()];
-                double[] checkPoint = new double[pr_gui.getFeatureCount()];
-                for (int i = 0; i<pr_gui.getFeatureCount(); i++){
-                    currFeatureSet[i] = SplitData[sampClass][i][checkNo];
-                    checkPoint[i] = SplitData[sampClass][i][sampNo];
+                double[] currFeatureSet = new double[SplitData[0].length];
+                double[] checkPoint = new double[SplitData[0].length];
+                for (int i = 0; i<SplitData[0].length; i++){ //to feature count
+                    currFeatureSet[i] = SplitData[sampClass][i][checkNo]; //set of features for checked training sample
+                    checkPoint[i] = SplitData[sampClass][i][sampNo]; //set of features for checked test sample
                 }
                 double dist = makeEuklides(currFeatureSet, checkPoint);
                 if(dist < minDist) minDist = dist;
@@ -126,7 +139,7 @@ public abstract class abstractClassifier {
     
     protected double makeEuklides(double[] CurrFeatureSet, double[] checkPoint){
         double sumOfSquares =0;
-        for (int feature=0;feature<pr_gui.getFeatureCount();feature++){
+        for (int feature=0;feature<CurrFeatureSet.length;feature++){
         double length = (CurrFeatureSet[feature]-checkPoint[feature]); //do kwadratu!!
         sumOfSquares+=length*length;
         }

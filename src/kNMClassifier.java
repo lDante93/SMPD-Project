@@ -10,6 +10,8 @@
  */
 public class kNMClassifier extends abstractClassifier{
     
-    
+    kNMClassifier(PR_GUI gui) {
+        pr_gui = gui;
+    } 
     
 }

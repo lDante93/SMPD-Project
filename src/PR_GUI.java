@@ -113,7 +113,6 @@ public class PR_GUI extends javax.swing.JFrame {
         jLabel18 = new javax.swing.JLabel();
         jScrollPaneClassifier = new javax.swing.JScrollPane();
         printAreaClassifier = new javax.swing.JTextArea();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
@@ -355,7 +354,7 @@ public class PR_GUI extends javax.swing.JFrame {
             }
         });
         jPanel4.add(jButton4);
-        jButton4.setBounds(180, 100, 96, 23);
+        jButton4.setBounds(210, 100, 96, 23);
 
         jLabel16.setText("Training part:");
         jPanel4.add(jLabel16);
@@ -414,15 +413,6 @@ public class PR_GUI extends javax.swing.JFrame {
 
         jPanel4.add(jScrollPaneClassifier);
         jScrollPaneClassifier.setBounds(230, 20, 106, 66);
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
-        jPanel4.add(jComboBox1);
-        jComboBox1.setBounds(290, 100, 56, 20);
 
         getContentPane().add(jPanel4);
         jPanel4.setBounds(340, 150, 350, 230);
@@ -500,7 +490,7 @@ public class PR_GUI extends javax.swing.JFrame {
             fisher = new Fisher(this);
         }
         else if(f_rb_extr.isSelected()){
-          FeatureExtraction featureEx = new FeatureExtraction(this);
+          //FeatureExtraction featureEx = new FeatureExtraction(this);
             
         }
     }//GEN-LAST:event_b_deriveFSActionPerformed
@@ -558,9 +548,11 @@ public class PR_GUI extends javax.swing.JFrame {
                 NMClassifier CNM = new NMClassifier(this);
                 CNM.classifySamples();
             }else if(selectClassMeth.getSelectedItem().equals("k-Nearest Neighbor (k-NN)")){
-                System.out.println("done even better"); //dodać implementację
+                kNNClassifier CkNN = new kNNClassifier(this);
+                CkNN.classifySamples();
             }else if(selectClassMeth.getSelectedItem().equals("k-Nearest Mean (k-NM)")){
-                System.out.println("done perfectly"); //dodać implementację
+                kNMClassifier CkNM = new kNMClassifier(this);
+                CkNM.classifySamples();
             }
         
         } else printAreaClassifier.setText ("You need to train Classifier first!");
@@ -583,10 +575,6 @@ public class PR_GUI extends javax.swing.JFrame {
             selbox_kSamples.setEnabled(false);
         }
     }//GEN-LAST:event_selectClassMethItemStateChanged
-
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
 
     /**
     * @param args the command line arguments
@@ -614,7 +602,6 @@ public class PR_GUI extends javax.swing.JFrame {
     private javax.swing.JRadioButton f_rb_sel;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

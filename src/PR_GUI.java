@@ -38,6 +38,7 @@ public class PR_GUI extends javax.swing.JFrame {
     ArrayList selboxItems = new ArrayList<String>();
     boolean isRead = false, isTrained=false, isParsed = false;
     private Fisher fisher;
+    private CrossValidation crossValidation;
     
     
     
@@ -594,7 +595,7 @@ public class PR_GUI extends javax.swing.JFrame {
         initializeSelboxItems();
         
     }//GEN-LAST:event_jButton2ActionPerformed
-private void kLoopsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kLoopsActionPerformed
+private void kLoopsActionPerformed(java.awt.event.ActionEvent evt) {                                       
         // TODO add your handling code here:
     }
     private void b_deriveFSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_deriveFSActionPerformed
@@ -607,8 +608,21 @@ private void kLoopsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         }
      
     }//GEN-LAST:event_b_deriveFSActionPerformed
-private void b_Train1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_Train1ActionPerformed
+private void b_Train1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // TODO add your handling code here:
+        if(crossValidationButton.isSelected())
+        {
+            if(!kSections.getText().equals("")){
+            int kSectionsNumber = Integer.parseInt(kSections.getText());
+            crossValidation = new CrossValidation(this, kSectionsNumber);
+            }
+            
+        }
+        else if(bootStrapButton.isSelected())
+        {
+            System.out.println("BootStrap");
+        }
+            
     }
     private void b_TrainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_TrainActionPerformed
         
@@ -631,7 +645,7 @@ private void b_Train1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         
 
     }//GEN-LAST:event_b_TrainActionPerformed
-private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // TODO add your handling code here:
     }//
     private void tf_PCA_EnergyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_PCA_EnergyActionPerformed
@@ -647,7 +661,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
         
         
     }//GEN-LAST:event_FSalgorithmActionPerformed
- private void crossValidationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crossValidationButtonActionPerformed
+ private void crossValidationButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         kLoops.setEnabled(false);
         kSections.setEnabled(true);
     }
@@ -695,11 +709,11 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
             selbox_kSamples.setEnabled(false);
         }
     }//GEN-LAST:event_selectClassMethItemStateChanged
- private void kSectionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kSectionsActionPerformed
+ private void kSectionsActionPerformed(java.awt.event.ActionEvent evt) {                                          
         // TODO add your handling code here:
     }
     
-    private void bootStrapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bootStrapButtonActionPerformed
+    private void bootStrapButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
         kLoops.setEnabled(true);
         kSections.setEnabled(false);
     }

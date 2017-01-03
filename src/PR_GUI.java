@@ -38,7 +38,7 @@ public class PR_GUI extends javax.swing.JFrame {
     ArrayList selboxItems = new ArrayList<String>();
     boolean isRead = false, isTrained=false, isParsed = false;
     private Fisher fisher;
-    private CrossValidation crossValidation;
+    private Cross_Validation crossValidation;
     
     
     
@@ -614,7 +614,7 @@ private void b_Train1ActionPerformed(java.awt.event.ActionEvent evt) {
         {
             if(!kSections.getText().equals("")){
             int kSectionsNumber = Integer.parseInt(kSections.getText());
-            crossValidation = new CrossValidation(this, kSectionsNumber);
+            crossValidation = new Cross_Validation(this, kSectionsNumber);
             }
             
         }

@@ -57,6 +57,8 @@ public class dataTrainer extends abstractClassifier{
     }
  /**
   * splits Dataset into a new array used in all classifier [classes][features][samples]
+  *ILOSC PROBEK W KLASACH NIE JEST TAKA SAMA - DODAC TEN PROBLEM tutaj flaga -1.01
+  * 
   * @param Dataset input matrix of [features][samples] for all classes
   */
     private void splitClases(double[][] Dataset){
@@ -80,5 +82,5 @@ public class dataTrainer extends abstractClassifier{
     }
 
     return random;
-}
+    }
 }

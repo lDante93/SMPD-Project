@@ -969,9 +969,32 @@ public int getSamplesCount(){
     return F[0].length;
     }
 
+public String getSelectionSelectClassMeth(){
+    return selectClassMeth.getSelectedItem().toString();
+}
 
 public int getKSamplesCount(){
     return Integer.parseInt(selbox_kSamples.getSelectedItem().toString());
+}
+
+public double getClassifierAccur(){
+    return Double.valueOf(classifierAccur.getText());
+}
+
+public double getClassifierAccur1(){
+    return Double.valueOf(classifierAccur.getText());
+}
+
+public void clearClassifierAccur(){
+    classifierAccur.setText("0");
+}
+
+public void setClassifierAccur1(double accuracy){
+    classifierAccur1.setText(Double.toString(accuracy));
+}
+
+public int getKLoops(){
+    return Integer.parseInt(kLoops.getText().toString());
 }
 
 private void initializeSelboxItems(){

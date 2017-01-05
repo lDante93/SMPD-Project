@@ -8,8 +8,6 @@ import java.util.Arrays;
  */
 
 /**
- *NOT SUPPORTED YET!!
- * currently if k>than possible k is just ignored (lower taken)
  * @author Sokol
  */
 public class kNNClassifier extends abstractClassifier{
@@ -20,14 +18,20 @@ public class kNNClassifier extends abstractClassifier{
        
        private double flag = 1000000000; //flag to fill minDist and serializedDistance with large number
     
-       
+    /**
+     * 
+     * @param sampleNo
+     * @param checkedClass
+     * @param flag
+     * @return 
+     */   
            @Override    
     protected int classifyTestSet(int sampleNo, int checkedClass, int flag){
         int Classification =flag; //class, 
         if (!isTrainSet(checkedClass,sampleNo)){ 
         double[][] classDist=  getKClassDist(checkedClass,sampleNo); //set of distances for each class class/dist.
             
-            Classification = classifyForKSamples(classDist); // if -1 than no more action taken - classification not possible
+            Classification = classifyForKSamples(classDist); // if -1 than no more action taken - classification not possible and regarded as false!!
             
             printClassifiedClass(Classification, sampleNo,checkedClass);
         }
@@ -38,10 +42,10 @@ public class kNNClassifier extends abstractClassifier{
     
     
      /**
-     * 
+     * Sets the array of all class distances in an ascending manner
      * @param checkedClass class to which distance is checked
      * @param sampleNo number of sample (from total samples) that is now tested
-     * @return array of k distances for class samples in increasing manner
+     * @return array of k distances for class samples in increasing manner [class][distance]
      */
     private double[][] getKClassDist(int checkedClass, int sampleNo){
     double[][] classDist = new double[pr_gui.getClassCount()][pr_gui.getKSamplesCount()];
@@ -56,7 +60,7 @@ public class kNNClassifier extends abstractClassifier{
     
     
     /**
-     * Classifies the sample takin into account nearest k distances and their classes
+     * Classifies the sample taking into account nearest k distances to the specified test sample and their classes
      * @param classDist array of k distances for class samples in increasing manner
      * @return classification of the current sample
      */
@@ -65,6 +69,13 @@ public class kNNClassifier extends abstractClassifier{
         return determineClass(classAndDistance);
 }
     
+     /**
+      * Sets k nearest distances to one specified class
+      * @param sampNo currently checked sample in test set
+      * @param sampClass class of test sample
+      * @param checkClass number of checked class
+      * @return array of k nearest distances of the specified test sample to specified class
+      */
         protected double[] getClassDistanceKNN(int sampNo, int sampClass, int checkClass){
         
             double minDist[] = new double[pr_gui.getKSamplesCount()]; //make array of mindist with length of k
@@ -91,15 +102,11 @@ public class kNNClassifier extends abstractClassifier{
         return minDist;
     }
  
-   
-
- 
-   
-    
-    
-
-
-
+/**
+ * Modifies the classDist so that it has the distances in ascending order and with a corresponding class.
+ * @param classDist input array with [class][class dist in ascending order]
+ * @return array [class dist in ascending order][corresponding class number]
+ */
 private double[][] serializeOutput(double[][] classDist){
     double[][] minDistClass = changeOrderIncr(classDist);    //k minimum distances and respective class
     return minDistClass;
@@ -131,6 +138,11 @@ private double[][] changeOrderIncr(double[][] classDist){
     return serializedDistance;
 }
 
+/**
+ * Determines the class to which the specified sample is classified.
+ * @param classAndDistance array of shortest distances to training samples and corresponding classes
+ * @return classification
+ */
 protected int determineClass(double[][] classAndDistance){
     int Classifier =0;
     int[] classCount = setClassCount(classAndDistance);
@@ -138,6 +150,11 @@ protected int determineClass(double[][] classAndDistance){
     return classifyForK(classCount);
 }
 
+/**
+ * Determines how many times each class was nearest in k neares neighbors.
+ * @param classAndDistance array of shortest distances to training samples and corresponding classes
+ * @return array [number] giving the number of times that the class is in k nearest neighbors
+ */
 private int[] setClassCount(double[][] classAndDistance){
     int[] classCount = new int[pr_gui.getClassCount()];
     Arrays.fill(classCount, 0);
@@ -147,6 +164,11 @@ private int[] setClassCount(double[][] classAndDistance){
     return classCount;
 }
 
+/**
+ * Classifies the sample to class basing on number of times that it is in k nearest distances
+ * @param classCount array [number] giving the number of times that the class is in k nearest neighbors
+ * @return classification of sample
+ */
 private int classifyForK(int[] classCount){
     int classifiedClass=0;
     int maxVal=0;

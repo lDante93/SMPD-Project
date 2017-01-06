@@ -52,6 +52,10 @@ public class PR_GUI extends javax.swing.JFrame {
         selbox_nfeat1.setEnabled(false);
         selbox_kSamples.setSelectedItem(1);
         selbox_kSamples.setEnabled(false);
+        selbox_kSamples1.setSelectedItem(1);
+        selbox_kSamples1.setEnabled(false);
+        kLoops.setText("1");
+        kSections.setText("1");
         setSize(720,410);
         printAreaClassifier.setEditable(false);
         
@@ -111,8 +115,8 @@ public class PR_GUI extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        printAreaClassifierAdv = new javax.swing.JTextArea();
+        selectClassMethAdv = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         bootStrapButton = new javax.swing.JRadioButton();
@@ -126,8 +130,10 @@ public class PR_GUI extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
         kSections = new javax.swing.JTextField();
-        b_Train1 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        executeAdvanced = new javax.swing.JButton();
+        trainAdvanced = new javax.swing.JButton();
+        jLabel29 = new javax.swing.JLabel();
+        selbox_kSamples1 = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
@@ -203,7 +209,7 @@ public class PR_GUI extends javax.swing.JFrame {
         );
 
         getContentPane().add(jPanel2);
-        jPanel2.setBounds(10, 50, 320, 80);
+        jPanel2.setBounds(10, 50, 300, 80);
 
         jButton2.setText("Parse dataset");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -212,7 +218,7 @@ public class PR_GUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton2);
-        jButton2.setBounds(190, 10, 130, 23);
+        jButton2.setBounds(160, 10, 130, 23);
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 204));
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -277,7 +283,7 @@ public class PR_GUI extends javax.swing.JFrame {
             }
         });
         jPanel4.add(selectClassMeth);
-        selectClassMeth.setBounds(110, 40, 152, 20);
+        selectClassMeth.setBounds(130, 40, 140, 20);
 
         jLabel16.setText("Training part:");
         jPanel4.add(jLabel16);
@@ -294,20 +300,20 @@ public class PR_GUI extends javax.swing.JFrame {
 
         jLabel11.setText("Classified classes (testSample):");
         jPanel4.add(jLabel11);
-        jLabel11.setBounds(10, 160, 190, 14);
+        jLabel11.setBounds(10, 180, 190, 14);
 
         classifClasses.setText("\"");
         jPanel4.add(classifClasses);
-        classifClasses.setBounds(210, 160, 130, 30);
+        classifClasses.setBounds(210, 170, 60, 30);
 
         jLabel19.setText("Accuracy of classification:");
         jPanel4.add(jLabel19);
-        jLabel19.setBounds(10, 190, 170, 14);
+        jLabel19.setBounds(10, 210, 170, 14);
 
         classifierAccur.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         classifierAccur.setText("0");
         jPanel4.add(classifierAccur);
-        classifierAccur.setBounds(210, 190, 30, 14);
+        classifierAccur.setBounds(210, 210, 30, 14);
 
         selbox_kSamples.setModel(new DefaultComboBoxModel(selboxItems.toArray()));
         selbox_kSamples.addActionListener(new java.awt.event.ActionListener() {
@@ -316,14 +322,14 @@ public class PR_GUI extends javax.swing.JFrame {
             }
         });
         jPanel4.add(selbox_kSamples);
-        selbox_kSamples.setBounds(170, 70, 50, 20);
+        selbox_kSamples.setBounds(150, 70, 50, 20);
 
         printAreaClassifier.setColumns(20);
         printAreaClassifier.setRows(5);
         jScrollPaneClassifier.setViewportView(printAreaClassifier);
 
         jPanel4.add(jScrollPaneClassifier);
-        jScrollPaneClassifier.setBounds(10, 210, 330, 150);
+        jScrollPaneClassifier.setBounds(10, 230, 260, 130);
 
         jLabel20.setText("Method:");
         jPanel4.add(jLabel20);
@@ -336,7 +342,7 @@ public class PR_GUI extends javax.swing.JFrame {
 
         jLabel24.setText("%");
         jPanel4.add(jLabel24);
-        jLabel24.setBounds(240, 190, 20, 14);
+        jLabel24.setBounds(240, 210, 20, 14);
 
         jLabel25.setText("Number of samples (k)");
         jPanel4.add(jLabel25);
@@ -358,14 +364,14 @@ public class PR_GUI extends javax.swing.JFrame {
         jButton4.setText("Execute");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                executeActionTaken(evt);
             }
         });
         jPanel4.add(jButton4);
-        jButton4.setBounds(220, 100, 106, 23);
+        jButton4.setBounds(170, 100, 100, 23);
 
         getContentPane().add(jPanel4);
-        jPanel4.setBounds(340, 10, 350, 370);
+        jPanel4.setBounds(320, 10, 280, 370);
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Results"));
         jPanel5.setLayout(null);
@@ -388,19 +394,29 @@ public class PR_GUI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         jPanel5.add(jScrollPane1);
-        jScrollPane1.setBounds(10, 40, 130, 150);
+        jScrollPane1.setBounds(10, 40, 110, 150);
 
         getContentPane().add(jPanel5);
-        jPanel5.setBounds(180, 140, 150, 240);
+        jPanel5.setBounds(180, 140, 130, 240);
 
         jPanel1.setBackground(new java.awt.Color(255, 204, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        printAreaClassifierAdv.setColumns(20);
+        printAreaClassifierAdv.setRows(5);
+        jScrollPane2.setViewportView(printAreaClassifierAdv);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nearest neighbor (NN)", "Nearest Mean (NM)", "k-Nearest Neighbor (k-NN)", "k-Nearest Mean (k-NM)" }));
+        selectClassMethAdv.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nearest neighbor (NN)", "Nearest Mean (NM)", "k-Nearest Neighbor (k-NN)", "k-Nearest Mean (k-NM)" }));
+        selectClassMethAdv.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                selectClassMethAdvItemStateChanged(evt);
+            }
+        });
+        selectClassMethAdv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectClassMethAdv(evt);
+            }
+        });
 
         jLabel9.setText("Method:");
 
@@ -454,17 +470,26 @@ public class PR_GUI extends javax.swing.JFrame {
             }
         });
 
-        b_Train1.setText("Train");
-        b_Train1.addActionListener(new java.awt.event.ActionListener() {
+        executeAdvanced.setText("Execute");
+        executeAdvanced.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                b_Train1ActionPerformed(evt);
+                executeAdvancedActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Execute");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        trainAdvanced.setText("Train");
+        trainAdvanced.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                trainAdvancedActionPerformed(evt);
+            }
+        });
+
+        jLabel29.setText("Number of samples (k)");
+
+        selbox_kSamples1.setModel(new DefaultComboBoxModel(selboxItems.toArray()));
+        selbox_kSamples1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selbox_kSamples1ActionPerformed(evt);
             }
         });
 
@@ -476,88 +501,98 @@ public class PR_GUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kLoops, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(b_Train1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(kSections, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel18)
-                                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(bootStrapButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(crossValidationButton)
-                                .addGap(20, 20, 20))
+                                .addComponent(crossValidationButton))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(kLoops, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(kSections, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(19, 19, 19)))))
+                        .addGap(92, 92, 92))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel23)
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(selbox_kSamples1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(selectClassMethAdv, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(trainAdvanced, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(classifierAccur1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(14, 14, 14)))
+                                .addComponent(executeAdvanced, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(72, 72, 72))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel23)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(classifierAccur1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(70, 70, 70)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(8, 8, 8)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(11, 11, 11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bootStrapButton)
                     .addComponent(crossValidationButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel26)
+                    .addComponent(jLabel18))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(kLoops, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel28)
+                    .addComponent(kSections, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(selectClassMethAdv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel29)
+                    .addComponent(selbox_kSamples1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel18)
-                    .addComponent(jLabel26))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(kSections, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel28))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(kLoops, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel17)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(b_Train1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5))
-                .addGap(18, 18, 18)
+                    .addComponent(trainAdvanced)
+                    .addComponent(executeAdvanced))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel23)
                     .addComponent(classifierAccur1)
                     .addComponent(jLabel21))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                .addGap(18, 18, 18))
         );
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(700, 10, 290, 370);
+        jPanel1.setBounds(610, 10, 300, 370);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -623,29 +658,7 @@ private void b_Train1ActionPerformed(java.awt.event.ActionEvent evt) {
             System.out.println("BootStrap");
         }
             
-    }
-    private void b_TrainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_TrainActionPerformed
-        
-        // first step: split dataset (in new feature space) into training / testing parts
-        if(isRead && isParsed){
-            dataTrainer DT = new dataTrainer(this,1);
-            
-            if(FNew==null){     // if no reduced feature space have been derived
-                DT.generateTraining_and_Test_Flags(F, tf_TrainSetSize.getText());
-            }   else{
-               DT.generateTraining_and_Test_Flags(FNew, tf_TrainSetSize.getText()); 
-            }
-            isTrained=true;
-        }else if(!isRead){
-            printAreaClassifier.setText ("You need to read data set first!");
-        }else if(!isParsed){
-            printAreaClassifier.setText ("You need to parse data set first!");
-        }
-        
-        
-
-    }//GEN-LAST:event_b_TrainActionPerformed
-private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    }private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // TODO add your handling code here:
     }//
     private void tf_PCA_EnergyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_PCA_EnergyActionPerformed
@@ -669,9 +682,26 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }//GEN-LAST:event_tf_TrainSetSizeActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void selectClassMethActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectClassMethActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_selectClassMethActionPerformed
 
-        if ( selectClassMeth.getSelectedItem().equals("k-Nearest Mean (k-NM)")){
+    private void selbox_kSamplesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selbox_kSamplesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_selbox_kSamplesActionPerformed
+
+    private void selectClassMethItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_selectClassMethItemStateChanged
+        if(selectClassMeth.getSelectedItem().equals("k-Nearest Mean (k-NM)") ||
+                selectClassMeth.getSelectedItem().equals("k-Nearest Neighbor (k-NN)")){
+            selbox_kSamples.setEnabled(true);
+        } else if(selectClassMeth.getSelectedItem().equals("Nearest neighbor(NN)") ||
+                selectClassMeth.getSelectedItem().equals("Nearest Mean (NM)")){
+            selbox_kSamples.setEnabled(false);
+        }
+    }//GEN-LAST:event_selectClassMethItemStateChanged
+
+    private void executeActionTaken(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeActionTaken
+       if ( selectClassMeth.getSelectedItem().equals("k-Nearest Mean (k-NM)")){
            System.out.println("done perfectly");
         }
         if(isTrained){
@@ -690,25 +720,90 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
             }
         
         } else printAreaClassifier.setText ("You need to train Classifier first!");
-    }//GEN-LAST:event_jButton4ActionPerformed
+                                         
 
-    private void selectClassMethActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectClassMethActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_selectClassMethActionPerformed
+    }//GEN-LAST:event_executeActionTaken
 
-    private void selbox_kSamplesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selbox_kSamplesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_selbox_kSamplesActionPerformed
+    private void executeAdvancedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeAdvancedActionPerformed
+      if(isTrained){
+         if(bootStrapButton.isSelected()){
+           bootstrap BS = new bootstrap (this, 1);
+         } else if(crossValidationButton.isSelected()){
+           //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FILL THIS IN!!!!!!!!!!!!!!!!!!!!!!!!!!!
+         }    
+      } else printAreaClassifierAdv.setText ("You need to train Classifier first!");
+        
+        
+        
+    }//GEN-LAST:event_executeAdvancedActionPerformed
 
-    private void selectClassMethItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_selectClassMethItemStateChanged
-        if(selectClassMeth.getSelectedItem().equals("k-Nearest Mean (k-NM)") ||
-                selectClassMeth.getSelectedItem().equals("k-Nearest Neighbor (k-NN)")){
-            selbox_kSamples.setEnabled(true);
-        } else if(selectClassMeth.getSelectedItem().equals("Nearest neighbor(NN)") ||
-                selectClassMeth.getSelectedItem().equals("Nearest Mean (NM)")){
-            selbox_kSamples.setEnabled(false);
+    private void b_TrainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b_TrainActionPerformed
+
+        // first step: split dataset (in new feature space) into training / testing parts
+        if(isRead && isParsed){
+            dataTrainer DT = new dataTrainer(this,1);
+
+            if(FNew==null){     // if no reduced feature space have been derived
+                DT.generateTraining_and_Test_Flags(F, tf_TrainSetSize.getText());
+            }   else{
+                DT.generateTraining_and_Test_Flags(FNew, tf_TrainSetSize.getText());
+            }
+            isTrained=true;
+            printAreaClassifier.setText ("Data trained");
+        }else if(!isRead){
+            printAreaClassifier.setText ("You need to read data set first!");
+        }else if(!isParsed){
+            printAreaClassifier.setText ("You need to parse data set first!");
         }
-    }//GEN-LAST:event_selectClassMethItemStateChanged
+
+    }//GEN-LAST:event_b_TrainActionPerformed
+
+    private void trainAdvancedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_trainAdvancedActionPerformed
+        
+        if(isRead && isParsed){
+            if(bootStrapButton.isSelected()){
+                if(getKLoops()>0 && getKLoops() < 10000){
+                    bootstrap BS = new bootstrap (this);
+                    printAreaClassifierAdv.setText ("Data trained");
+                    isTrained=true;  
+                } else printAreaClassifierAdv.setText ("Insert proper number of loops");
+                              
+            } else if (crossValidationButton.isSelected()){
+                
+                
+                
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FILL THIS IN!!!!!!!!!!!!!!!!!!!!!!!!
+                
+                
+                
+                
+                printAreaClassifierAdv.setText ("Data trained");
+                isTrained=true;
+            } else printAreaClassifierAdv.setText ("Check the desired classification method bootstrap/crossvalidation");      
+        }else if(!isRead){
+            printAreaClassifierAdv.setText ("You need to read data set first!");
+        }else if(!isParsed){
+            printAreaClassifierAdv.setText ("You need to parse data set first!");
+        }
+    }//GEN-LAST:event_trainAdvancedActionPerformed
+
+    private void selbox_kSamples1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selbox_kSamples1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_selbox_kSamples1ActionPerformed
+
+    private void selectClassMethAdvItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_selectClassMethAdvItemStateChanged
+       if(selectClassMethAdv.getSelectedItem().equals("k-Nearest Mean (k-NM)") ||
+                selectClassMethAdv.getSelectedItem().equals("k-Nearest Neighbor (k-NN)")){
+            selbox_kSamples1.setEnabled(true);
+        } else if(selectClassMethAdv.getSelectedItem().equals("Nearest neighbor(NN)") ||
+                selectClassMethAdv.getSelectedItem().equals("Nearest Mean (NM)")){
+            selbox_kSamples1.setEnabled(false);
+        }
+    }//GEN-LAST:event_selectClassMethAdvItemStateChanged
+
+    private void selectClassMethAdv(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectClassMethAdv
+        // TODO add your handling code here:
+    }//GEN-LAST:event_selectClassMethAdv
  private void kSectionsActionPerformed(java.awt.event.ActionEvent evt) {                                          
         // TODO add your handling code here:
     }
@@ -732,7 +827,6 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JComboBox<String> FSalgorithm;
     private javax.swing.ButtonGroup advancedClassification;
     private javax.swing.JButton b_Train;
-    private javax.swing.JButton b_Train1;
     private javax.swing.JButton b_deriveFS;
     private javax.swing.JButton b_read;
     private javax.swing.JRadioButton bootStrapButton;
@@ -741,10 +835,9 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JLabel classifierAccur;
     private javax.swing.JLabel classifierAccur1;
     private javax.swing.JRadioButton crossValidationButton;
+    private javax.swing.JButton executeAdvanced;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
@@ -762,6 +855,7 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -778,7 +872,6 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneClassifier;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField kLoops;
     private javax.swing.JTextField kSections;
     public javax.swing.JLabel l_FLD_val;
@@ -786,11 +879,15 @@ private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JLabel l_dataset_name_l;
     private javax.swing.JLabel l_nfeatures;
     private javax.swing.JTextArea printAreaClassifier;
+    private javax.swing.JTextArea printAreaClassifierAdv;
     private javax.swing.ButtonGroup rbg_F;
     private javax.swing.JComboBox selbox_kSamples;
+    private javax.swing.JComboBox selbox_kSamples1;
     private javax.swing.JComboBox selbox_nfeat1;
     private javax.swing.JComboBox selectClassMeth;
+    private javax.swing.JComboBox<String> selectClassMethAdv;
     private javax.swing.JTextField tf_TrainSetSize;
+    private javax.swing.JButton trainAdvanced;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -973,8 +1070,15 @@ public String getSelectionSelectClassMeth(){
     return selectClassMeth.getSelectedItem().toString();
 }
 
+public String getSelectionSelectClassMethAdv(){
+    return selectClassMethAdv.getSelectedItem().toString();
+}
+
 public int getKSamplesCount(){
-    return Integer.parseInt(selbox_kSamples.getSelectedItem().toString());
+    if (abstractClassifier.K_TrainOrTestSet==null){
+       return Integer.parseInt(selbox_kSamples.getSelectedItem().toString()); 
+    }
+        return Integer.parseInt(selbox_kSamples1.getSelectedItem().toString());
 }
 
 public double getClassifierAccur(){
@@ -1000,7 +1104,8 @@ public int getKLoops(){
 private void initializeSelboxItems(){
     
     initializeOneSelboxItem((DefaultComboBoxModel)selbox_nfeat1.getModel(), getFeatureCount()-1); //selecting the same amount of features makes no sense
-    initializeOneSelboxItem((DefaultComboBoxModel)selbox_kSamples.getModel(), getSamplesCount()/getClassCount());  
+    initializeOneSelboxItem((DefaultComboBoxModel)selbox_kSamples.getModel(), getSamplesCount()/getClassCount()); 
+    initializeOneSelboxItem((DefaultComboBoxModel)selbox_kSamples1.getModel(), getSamplesCount()/getClassCount());
 }
 
 private void initializeOneSelboxItem(DefaultComboBoxModel JComboBox, int nSelection){

@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /*
@@ -16,8 +17,22 @@ public class bootstrap extends abstractClassifier{
     
     PR_GUI pr_gui = new PR_GUI();
    Random generator = new Random();
-    double[][] Dataset;
-    int [][][] K_TrainOrTestSet; // [K][class], [trainOrTest(0,1)] an array keeping all the k sets of flags with trainOrTestSet[][] of abstractClassifier
+
+        /**
+     * Makes Training of the data for classifier
+     * @param gui 
+     */
+    bootstrap (PR_GUI gui) {
+        pr_gui = gui;
+        if(pr_gui.getFNew()==null){     // if no reduced feature space have been derived
+               super.Dataset = pr_gui.getF();
+            }   else{
+              super.Dataset = pr_gui.getFNew();
+            }
+        
+        splitClases(super.Dataset);
+        makeTrainAndTestSets();
+    } 
     
     /**
      * executes the classifier and prints the results on the gui
@@ -31,6 +46,11 @@ public class bootstrap extends abstractClassifier{
         printResult(resultOfClassification);
     }
     
+    /**
+     * Calculates the final result of the classification
+     * @param resultTable table with results of k classifications
+     * @return final result of classification as double 0-1
+     */
     private double determineFinalResult(double[] resultTable){
         double temp=0;
         for (int i=0; i<resultTable.length;i++){
@@ -39,26 +59,16 @@ public class bootstrap extends abstractClassifier{
         return  (double)temp/resultTable.length;
     }
     
+    /**
+     * Prints the result in pr_gui
+     * @param result result of a classification
+     */
     private void printResult(double result){
         pr_gui.setClassifierAccur1(result);
         pr_gui.clearClassifierAccur();
     }
     
-    /**
-     * Makes Training of the data for classifier
-     * @param gui 
-     */
-    bootstrap (PR_GUI gui) {
-        pr_gui = gui;
-        if(pr_gui.getFNew()==null){     // if no reduced feature space have been derived
-                Dataset = pr_gui.getFNew();
-            }   else{
-               Dataset = pr_gui.getF();
-            }
-        
-        splitClases(Dataset);
-        makeTrainAndTestSets();
-    }
+
     
     
       /**
@@ -78,7 +88,7 @@ public class bootstrap extends abstractClassifier{
      }
  }   
     /**
-     * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     * makes and fills the array K_TrainAndTestSets with flags for train or test sample
      */
     protected void makeTrainAndTestSets(){
         K_TrainOrTestSet = new int[pr_gui.getKLoops()][pr_gui.getClassCount()][SplitData[0][0].length];
@@ -88,34 +98,99 @@ public class bootstrap extends abstractClassifier{
         }
     }
     
+    /**
+     * makes and fills the trainOrTestSet for one classification
+     * @return KTrainOrTestSet[i]
+     */
     private int[][] updateSets(){
         int[][] updatedSets = new int[pr_gui.getClassCount()][SplitData[0][0].length];
         for (int i=0;i<pr_gui.getClassCount();i++){
             updatedSets[i] = updateClass();
+            while (setHasNoTestSamples(updatedSets[i]) ){ //set must have at least one test sample for big sample amounts && updatedSets[i].length>50
+               updatedSets[i] = updateClass(); 
+            }
         }
+        
         return updatedSets;
     }
     
-    private int[] updateClass(){
-        for (int i=0;i<SplitData[0][0].length){
-            generator.nextInt(SplitData[0][0].length)
+    /**
+     * Determines, whether set has at least one test sample
+     * @param setToCheck input set of flags
+     * @return true if no test samples; false if at least one test sample
+     */
+    private boolean setHasNoTestSamples(int[] setToCheck){
+        for(int i=0; i<setToCheck.length; i++){
+            if (setToCheck[i] == TEST_SET){ //if there is one test sample set has test samples
+                return false;
+            }
         }
+        return true;
     }
-   
     
+    /**
+     * Updates the train or test set for one class
+     * @return TrainOrTestSet for one class
+     */
+    private int[] updateClass(){
+        int[] randomNumb = createRandomNumberSet();
+        return setTrainOrTestSet(randomNumb);     
+    }
+    
+    
+    private int[] createRandomNumberSet(){
+        int[] randomNumb = new int[SplitData[0][0].length];
+        for (int i=0; i<SplitData[0][0].length; i++){
+            randomNumb[i] = generator.nextInt(SplitData[0][0].length);
+        }
+        return randomNumb;
+    }
+    /**
+     * Makes and fills an array with flag of train or test set
+     * @param randomNumb array with random numbers in range of 0 to samples.length
+     * @return array with flag for train or test set
+     */
+    private int[] setTrainOrTestSet(int[] randomNumb){
+        int[] TrainOrTestSet = new int[randomNumb.length];
+        Arrays.fill(TrainOrTestSet, super.TEST_SET);
+        for (int i=0; i< randomNumb.length; i++){
+            for (int j=0; j<randomNumb.length; j++){
+                if(i==randomNumb[j]) //if there is such number in randomNumb - it is train set
+                TrainOrTestSet[i]=super.TRAIN_SET;
+                break; //if there is one, it is not necessary to check further
+            }
+        }
+        return TrainOrTestSet;
+    }
+    
+    
+   
+    /**
+     * executes the proper classifier k times with an updated trainand test set
+     * @return classification results [k] as double 0-1
+     */
     protected double[] executeClassifier(){
             double[] classificationResults = new double[pr_gui.getKLoops()];
         for (int i=0; i<pr_gui.getKLoops(); i++){
-            classifySample(pr_gui.getSelectionSelectClassMeth());
+            super.trainOrTestSet = this.K_TrainOrTestSet[i];
+            classifySample(pr_gui.getSelectionSelectClassMethAdv());
              classificationResults[i] = returnResult();
         }
         return classificationResults;
     }
     
+    /**
+     * prints the result of one classification in pr_gui
+     * @return double result 0-1
+     */
     private double returnResult(){
         return pr_gui.getClassifierAccur();
     }
     
+    /**
+     * Classifies the samples with a proper cassifier
+     * @param selectionMessage takes an Message, which classifier is chosen
+     */
     private void classifySample(String selectionMessage){
         if ( selectionMessage.equals("Nearest neighbor (NN)")){
                NNClassifier CNN = new NNClassifier(pr_gui);
@@ -131,32 +206,5 @@ public class bootstrap extends abstractClassifier{
                 CkNM.classifySamples();
             }
     }
-    
-    
-    protected void generateTrainOrTestSet(double[][] Dataset, String TrainSetSize){
-        
-        
-    for (int i = 0; i< Dataset[0].length; i++){
-            
-            int randomNumb = generateRandom(1, Dataset[0].length);
-            excludeRows.add(randomNumb);
-            if(((double) randomNumb)/Dataset[0].length < Th) {
-                trainOrTestSet[classNo][getProperI(i, classNo)]=TRAIN_SET;
-            }
-            else {
-                trainOrTestSet[classNo][getProperI(i, classNo)]=TEST_SET;
-            }                   
-        }
-    }
-    
-    public int generateRandom(int start, int end, ArrayList<Integer> excludeRows) {
-    int range = end - start +1;
-    int random = generator.nextInt(range) + 1;
-
-    while(excludeRows.contains(random)){
-        random = generator.nextInt(range)+1;
-    }
-
-    return random;
-    }
+  
 }

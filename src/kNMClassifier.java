@@ -139,13 +139,13 @@ public class kNMClassifier extends abstractClassifier{
    * @return 
    */
   @Override
- protected double getClassDistance(int sampNo, int sampClass, int checkClass){
+ protected double getClassDistance(int sampNo, int checkClass, int sampClass){
         double minDist = Math.pow(100, 100);
         for (int checkNo = 0; checkNo < centerPoints[sampClass].length; checkNo++){ //count of centres in class
                 double[] currFeatureSet = new double[SplitData[0].length];
                 double[] checkPoint = new double[SplitData[0].length];
                 for (int i = 0; i<SplitData[0].length; i++){ //to feature count
-                    currFeatureSet[i] = centerPoints[sampClass][checkNo][i]; //set of features for checked training sample
+                    currFeatureSet[i] = centerPoints[checkClass][checkNo][i]; //set of features for checked training sample
                     checkPoint[i] = SplitData[sampClass][i][sampNo]; //set of features for checked test sample
                 }
                 double dist = makeEuklides(currFeatureSet, checkPoint);

@@ -18,7 +18,10 @@ public abstract class abstractClassifier {
    static int[][] trainOrTestSet; //[class], [trainOrTest(0,1)]
     PR_GUI pr_gui = new PR_GUI();
    Random generator = new Random();  
-   
+   //  needed only for bootstrap
+    static double[][] Dataset;
+    static int [][][] K_TrainOrTestSet; // [K][class], [trainOrTest(0,1)] an array keeping all the k sets of flags with trainOrTestSet[][] of abstractClassifier
+    
    
 /**
  * counts samples in class
@@ -132,14 +135,14 @@ public abstract class abstractClassifier {
      * @param checkClass class to which distance is computed
      * @return minimum distance of the spec. sample to the spec. class
      */
-    protected double getClassDistance(int sampNo, int sampClass, int checkClass){
+    protected double getClassDistance(int sampNo, int checkClass, int sampClass){
         double minDist = Math.pow(100, 100);
         for (int checkNo = 0; checkNo < SplitData[sampClass][0].length; checkNo++){ //count of samples in class
             if (isTrainSet(checkClass,checkNo)&& notCheckingSample(sampClass,checkClass,sampNo,checkNo)){
                 double[] currFeatureSet = new double[SplitData[0].length];
                 double[] checkPoint = new double[SplitData[0].length];
                 for (int i = 0; i<SplitData[0].length; i++){ //to feature count
-                    currFeatureSet[i] = SplitData[sampClass][i][checkNo]; //set of features for checked training sample
+                    currFeatureSet[i] = SplitData[checkClass][i][checkNo]; //set of features for checked training sample
                     checkPoint[i] = SplitData[sampClass][i][sampNo]; //set of features for checked test sample
                 }
                 double dist = makeEuklides(currFeatureSet, checkPoint);

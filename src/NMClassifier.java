@@ -22,7 +22,7 @@ public class NMClassifier extends abstractClassifier{
      * @return minimum distance of the spec. sample to the spec. class
      */
       @Override
-      protected double getClassDistance(int sampNo, int sampClass, int checkClass){
+      protected double getClassDistance(int sampNo, int checkClass, int sampClass){
 
         double[] currFeatureSet = new double[pr_gui.getFeatureCount()]; // set of features for current sample
         double[] meanFeatureSet = new double[pr_gui.getFeatureCount()]; //mean feature set of sample
@@ -33,8 +33,8 @@ public class NMClassifier extends abstractClassifier{
             if (isTrainSet(checkClass,checkNo)&& notCheckingSample(sampClass,checkClass,sampNo,checkNo)){ //if shuld be checked
                 currSampleCount++; 
                 for (int i = 0; i<SplitData[0].length; i++){ //to feature count
-                    currFeatureSet[i] += SplitData[sampClass][i][checkNo]; //cumulative value of features for checked class
-                    checkPoint[i] = SplitData[sampClass][i][sampNo]; //set of features for checked test sample
+                    currFeatureSet[i] += SplitData[checkClass][i][checkNo]; //cumulative value of features for checked class
+                    checkPoint[i] = SplitData[sampClass][i][sampNo]; //set of features for  test sample
                 }
             }
         }

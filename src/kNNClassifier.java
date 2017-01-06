@@ -76,7 +76,7 @@ public class kNNClassifier extends abstractClassifier{
       * @param checkClass number of checked class
       * @return array of k nearest distances of the specified test sample to specified class
       */
-        protected double[] getClassDistanceKNN(int sampNo, int sampClass, int checkClass){
+        protected double[] getClassDistanceKNN(int sampNo, int checkClass, int sampClass){
         
             double minDist[] = new double[pr_gui.getKSamplesCount()]; //make array of mindist with length of k
         Arrays.fill(minDist, flag);
@@ -87,7 +87,7 @@ public class kNNClassifier extends abstractClassifier{
                 double[] currFeatureSet = new double[SplitData[0].length]; //set of features for current. checked training sample
                 double[] checkPoint = new double[SplitData[0].length]; //set of features for checked test sample
                 for (int i = 0; i<SplitData[0].length; i++){ //fill arrays with current data
-                    currFeatureSet[i] = SplitData[sampClass][i][checkNo];
+                    currFeatureSet[i] = SplitData[checkClass][i][checkNo];
                     checkPoint[i] = SplitData[sampClass][i][sampNo];
                 }
                 double dist = makeEuklides(currFeatureSet, checkPoint);

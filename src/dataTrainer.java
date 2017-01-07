@@ -62,7 +62,7 @@ public class dataTrainer extends abstractClassifier{
   * @param Dataset input matrix of [features][samples] for all classes
   */
     private void splitClases(double[][] Dataset){
-     SplitData = new double[pr_gui.getClassCount()][Dataset.length][Dataset[0].length/pr_gui.getClassCount()]; //class/features/samples
+     SplitData = new Double[pr_gui.getClassCount()][Dataset.length][Dataset[0].length/pr_gui.getClassCount()]; //class/features/samples
      int nLoop = 0;
      for (int i=0;i<pr_gui.getClassCount();i++){ //loop for class
          nLoop++; //current class

@@ -12,7 +12,7 @@ import java.util.Random;
  * @author Sokol
  */
 public abstract class abstractClassifier {
-   static double[][][] SplitData; //data splits into classes (first ind is class) class/faetures/samples
+   static Double[][][] SplitData; //data splits into classes (first ind is class) class/faetures/samples
    static int[] ClassLabels;
    static final int TRAIN_SET=0, TEST_SET=1;
    static int[][] trainOrTestSet; //[class], [trainOrTest(0,1)]

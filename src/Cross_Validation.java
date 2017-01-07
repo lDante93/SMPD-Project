@@ -11,16 +11,18 @@ import java.util.Arrays;
  *
  * @author Dante
  */
-public class Cross_Validation {
+public class Cross_Validation extends abstractClassifier{
 
-    
     private double accuracyOfClassification;
     private double[][] F2;
     private ArrayList<Double[]> kSectionsArray;
+    private Double[] kSectionsArray2;
+    private Double[][][] SplitData;
     private int kSections;
     private int numberOfFeatures;
     private PR_GUI gui;
-    Double[] sectionTab;
+    private Double[] sectionTab;
+    private int[] numberOfSector;
 
     public Cross_Validation(PR_GUI gui, int kSections) {
         this.gui = gui;
@@ -32,73 +34,70 @@ public class Cross_Validation {
     public void metoda() {
         int sectionLoopCount = 0;
         int sectionSamplesCount = 0;
-        F2 = new double[gui.FNew.length][10];
-        numberOfFeatures = 10 / kSections;
+        int amountOfSamples = gui.getClassLabels().length;
+        F2 = new double[gui.FNew.length][amountOfSamples];
+        int countLoop = 0;
+        numberOfFeatures = amountOfSamples / kSections;
 
         for (int i = 0; i < F2.length; i++) {
             for (int j = 0; j < F2[i].length; j++) {
                 F2[i][j] = gui.FNew[i][j];
             }
         }
-//        for (int i = 0; i < 10; i++) {
-//            F2[0][i] = i + 1;
-//        }
         for (double[] x : F2) {
             System.out.println(Arrays.toString(x));
         }
 
         System.out.println(numberOfFeatures);
         kSectionsArray = new ArrayList<>();
-
+        kSectionsArray2 = new Double[amountOfSamples];
+        numberOfSector=new int[amountOfSamples];
+        
+        
         while (sectionLoopCount < kSections) {
             sectionTab = new Double[numberOfFeatures];
             for (int i = 0; i < 1; i++) {
                 for (int j = sectionSamplesCount; j < sectionSamplesCount + numberOfFeatures; j++) {
-                    sectionTab[j-sectionSamplesCount] = F2[i][j];
+                    sectionTab[j - sectionSamplesCount] = F2[i][j];
+                    numberOfSector[j]=sectionLoopCount;
                 }
-                kSectionsArray.add(sectionTab);
+
             }
 
-//            for (int i = 0; i < gui.FNew.length; i++) {
-//                
-//                for (int j = sectionSamplesCount; j < (sectionSamplesCount + gui.FNew.length); j++) {
-//                    
-//                    sectionTab[i][j - sectionSamplesCount] = F2[i][j];
-//                }
-            // System.out.println(Arrays.toString(sectionTab));
-        
-        kSectionsArray.add(sectionTab);
-//                 for(Double[] x:kSectionsArray)
-//        System.out.println(Arrays.toString(x));
-//                    System.out.println();
-//            }
+            for (int i = 0; i < sectionTab.length; i++) {
+                kSectionsArray2[countLoop] = sectionTab[i];
+                countLoop++;
+            }
 
-        sectionSamplesCount = sectionSamplesCount + numberOfFeatures;
-        sectionLoopCount++;
+            sectionSamplesCount = sectionSamplesCount + numberOfFeatures;
+            sectionLoopCount++;
         }
-        for (Double[] x : kSectionsArray) {
 
-            System.out.println(Arrays.toString(x));
+
+        SplitData = new Double[2][gui.FNew.length][kSectionsArray2.length];
+        for (int i = 0; i < kSectionsArray2.length; i++) {
+            if (i < gui.getSampleCount()[0]) {
+                SplitData[0][0][i] = kSectionsArray2[i];
+               
+            } else if ((i < gui.getSampleCount()[1])) {
+                SplitData[1][0][i] = kSectionsArray2[i];
+            }
+             if(SplitData[0][0][i]==null)
+                {
+                    SplitData[0][0][i]=-1.01;
+                }
+             if(SplitData[1][0][i]==null)
+                {
+                    SplitData[1][0][i]=-1.01;
+                }
         }
+//        SplitData=Arrays.stream(SplitData)
+//                     .filter(s -> (s != null && SplitData.length > 0))
+//                     .toArray(Double[][]::new);
+   
+super.SplitData=this.SplitData;
         System.out.println("y)");
     }
 }
 
-// fr (int i = 0; i < 1; i++) {
-//                sectionTab = new Double[numberOfFeatures][];
-//                for (int j = sectionSamplesCount; j < (sectionSamplesCount + numberOfFeatures); j++) {
-//                    
-//                    sectionTab[j - sectionSamplesCount] = F2[i][j];
-//                }
-//               // System.out.println(Arrays.toString(sectionTab));
-//                 kSectionsArray.add(sectionTab);
-////                 for(Double[] x:kSectionsArray)
-////        System.out.println(Arrays.toString(x));
-////                    System.out.println();
-////            }
-//
-//            sectionSamplesCount = sectionSamplesCount + numberOfFeatures;
-//            sectionLoopCount++;
-//
-//        }    
 

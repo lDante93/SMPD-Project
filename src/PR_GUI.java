@@ -38,7 +38,7 @@ public class PR_GUI extends javax.swing.JFrame {
     ArrayList selboxItems = new ArrayList<String>();
     boolean isRead = false, isTrained=false, isParsed = false;
     private Fisher fisher;
-    private Cross_Validation crossValidation;
+   
     
     
     
@@ -643,22 +643,7 @@ private void kLoopsActionPerformed(java.awt.event.ActionEvent evt) {
         }
      
     }//GEN-LAST:event_b_deriveFSActionPerformed
-private void b_Train1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
-        if(crossValidationButton.isSelected())
-        {
-            if(!kSections.getText().equals("")){
-            int kSectionsNumber = Integer.parseInt(kSections.getText());
-            crossValidation = new Cross_Validation(this, kSectionsNumber);
-            }
-            
-        }
-        else if(bootStrapButton.isSelected())
-        {
-            System.out.println("BootStrap");
-        }
-            
-    }private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // TODO add your handling code here:
     }//
     private void tf_PCA_EnergyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_PCA_EnergyActionPerformed
@@ -729,7 +714,7 @@ private void b_Train1ActionPerformed(java.awt.event.ActionEvent evt) {
          if(bootStrapButton.isSelected()){
            bootstrap BS = new bootstrap (this, 1);
          } else if(crossValidationButton.isSelected()){
-           //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FILL THIS IN!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          Cross_Validation crossValidation = new Cross_Validation(this, 1,1);
          }    
       } else printAreaClassifierAdv.setText ("You need to train Classifier first!");
         
@@ -771,8 +756,8 @@ private void b_Train1ActionPerformed(java.awt.event.ActionEvent evt) {
             } else if (crossValidationButton.isSelected()){
                 
                 
-                
-                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FILL THIS IN!!!!!!!!!!!!!!!!!!!!!!!!
+                          int kSectionsNumber = Integer.parseInt(kSections.getText());
+            Cross_Validation crossValidation = new Cross_Validation(this, kSectionsNumber);
                 
                 
                 
@@ -1099,6 +1084,9 @@ public void setClassifierAccur1(double accuracy){
 
 public int getKLoops(){
     return Integer.parseInt(kLoops.getText().toString());
+}
+public int getKSecs(){
+    return Integer.parseInt(kSections.getText().toString());
 }
 
 private void initializeSelboxItems(){

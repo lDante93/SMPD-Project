@@ -15,13 +15,13 @@ public abstract class abstractClassifier {
    static Double[][][] SplitData; //data splits into classes (first ind is class) class/faetures/samples
    static int[] ClassLabels;
    static final int TRAIN_SET=0, TEST_SET=1;
-   static int[][] trainOrTestSet; //[class], [trainOrTest(0,1)]
+   static Integer[][] trainOrTestSet; //[class], [trainOrTest(0,1)]
     PR_GUI pr_gui = new PR_GUI();
    Random generator = new Random();  
    //  needed only for bootstrap
     static double[][] Dataset;
-    static int [][][] K_TrainOrTestSet; // [K][class], [trainOrTest(0,1)] an array keeping all the k sets of flags with trainOrTestSet[][] of abstractClassifier
-    
+    static Integer [][][] K_TrainOrTestSet; // [K],[class], [trainOrTest(0,1)] an array keeping all the k sets of flags with trainOrTestSet[][] of abstractClassifier
+
    
 /**
  * counts samples in class

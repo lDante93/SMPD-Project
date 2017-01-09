@@ -91,7 +91,7 @@ public class bootstrap extends abstractClassifier{
      * makes and fills the array K_TrainAndTestSets with flags for train or test sample
      */
     protected void makeTrainAndTestSets(){
-        K_TrainOrTestSet = new int[pr_gui.getKLoops()][pr_gui.getClassCount()][SplitData[0][0].length];
+        K_TrainOrTestSet = new Integer[pr_gui.getKLoops()][pr_gui.getClassCount()][SplitData[0][0].length];
         
         for (int i=0; i<pr_gui.getKLoops();i++){
             K_TrainOrTestSet[i] = updateSets();
@@ -102,8 +102,8 @@ public class bootstrap extends abstractClassifier{
      * makes and fills the trainOrTestSet for one classification
      * @return KTrainOrTestSet[i]
      */
-    private int[][] updateSets(){
-        int[][] updatedSets = new int[pr_gui.getClassCount()][SplitData[0][0].length];
+    private Integer[][] updateSets(){
+        Integer[][] updatedSets = new Integer[pr_gui.getClassCount()][SplitData[0][0].length];
         for (int i=0;i<pr_gui.getClassCount();i++){
             updatedSets[i] = updateClass();
             while (setHasNoTestSamples(updatedSets[i]) ){ //set must have at least one test sample for big sample amounts && updatedSets[i].length>50
@@ -119,7 +119,7 @@ public class bootstrap extends abstractClassifier{
      * @param setToCheck input set of flags
      * @return true if no test samples; false if at least one test sample
      */
-    private boolean setHasNoTestSamples(int[] setToCheck){
+    private boolean setHasNoTestSamples(Integer[] setToCheck){
         for(int i=0; i<setToCheck.length; i++){
             if (setToCheck[i] == TEST_SET){ //if there is one test sample set has test samples
                 return false;
@@ -132,14 +132,14 @@ public class bootstrap extends abstractClassifier{
      * Updates the train or test set for one class
      * @return TrainOrTestSet for one class
      */
-    private int[] updateClass(){
-        int[] randomNumb = createRandomNumberSet();
+    private Integer[] updateClass(){
+        Integer[] randomNumb = createRandomNumberSet();
         return setTrainOrTestSet(randomNumb);     
     }
     
     
-    private int[] createRandomNumberSet(){
-        int[] randomNumb = new int[SplitData[0][0].length];
+    private Integer[] createRandomNumberSet(){
+        Integer[] randomNumb = new Integer[SplitData[0][0].length];
         for (int i=0; i<SplitData[0][0].length; i++){
             randomNumb[i] = generator.nextInt(SplitData[0][0].length);
         }
@@ -150,8 +150,8 @@ public class bootstrap extends abstractClassifier{
      * @param randomNumb array with random numbers in range of 0 to samples.length
      * @return array with flag for train or test set
      */
-    private int[] setTrainOrTestSet(int[] randomNumb){
-        int[] TrainOrTestSet = new int[randomNumb.length];
+    private Integer[] setTrainOrTestSet(Integer[] randomNumb){
+        Integer[] TrainOrTestSet = new Integer[randomNumb.length];
         Arrays.fill(TrainOrTestSet, super.TEST_SET);
         for (int i=0; i< randomNumb.length; i++){
             for (int j=0; j<randomNumb.length; j++){

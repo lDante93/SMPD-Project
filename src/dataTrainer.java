@@ -30,7 +30,7 @@ public class dataTrainer extends abstractClassifier{
         
         splitClases(Dataset);
         
-        trainOrTestSet = new int[pr_gui.getClassCount()][pr_gui.getSamplesCount()/pr_gui.getClassCount()]; //no support for diff sample size
+        trainOrTestSet = new Integer[pr_gui.getClassCount()][pr_gui.getSamplesCount()/pr_gui.getClassCount()]; //no support for diff sample size
         double Th = Double.parseDouble(TrainSetSize)/100.0;
         int classNo=0;
         ArrayList<Integer> excludeRows = new ArrayList<Integer>();

@@ -105,7 +105,8 @@ public class Cross_Validation extends abstractClassifier {
         numberOfClassArray = new Integer[pr_gui.FNew.length][amountOfSamples];
         int samplesInSectorCount = 0;
         int classCounter = kSections - 1;
-        while (sectionLoopCount < kSections) {
+        while (sectionLoopCount < kSections) { //the purpouse of this loop is to make a k sections with guaranteed proportion
+            //of the n classes
 
             sectionTab = new Double[pr_gui.FNew.length][numberOfFeatures];
             for (int i = 0; i < pr_gui.FNew.length; i++) {
@@ -126,7 +127,7 @@ public class Cross_Validation extends abstractClassifier {
                 }
 
             }
-            for (int i = 0; i < pr_gui.FNew.length; i++) {
+            for (int i = 0; i < pr_gui.FNew.length; i++) {//this loop will merge the sections in to a one array
 
                 for (int j = 0; j < sectionTab[0].length; j++) {
                     kSectionsArray[i][countLoop[i]] = sectionTab[i][j];
@@ -144,7 +145,7 @@ public class Cross_Validation extends abstractClassifier {
         Double[][] kSectionsArray2 = new Double[kSectionsArray.length][amountOfSamples];
 
         kSectionsArray2 = kSectionsArray;
-        for (int i = 0; i < kSectionsArray2.length; i++) {
+        for (int i = 0; i < kSectionsArray2.length; i++) { //the second array in this loop will have nulls replaced by flags: "-1.01"
 
             for (int j = 0; j < kSectionsArray2[i].length; j++) {
                 if (kSectionsArray2[i][j] == null) {
@@ -154,7 +155,7 @@ public class Cross_Validation extends abstractClassifier {
         }
 //        int c = 0;
 //
-//        for (int i = 0; i < kSectionsArray.length; i++) {
+//        for (int i = 0; i < kSectionsArray.length; i++) { //it was a loop that was deleting nulls, but better for our program is to replace them by flags
 //            ArrayList<Object> list = new ArrayList<Object>();
 //            for (int j = 0; j < kSectionsArray[i].length; j++) {
 //                if (kSectionsArray[i][j] != null) {
@@ -168,13 +169,13 @@ public class Cross_Validation extends abstractClassifier {
         int samplesInClass = kSectionsArray2[0].length / pr_gui.getClassCount();
 
         SplitData = new Double[pr_gui.getClassCount()][pr_gui.FNew.length][amountOfSamples];
-        for (Double[][] a : SplitData) {
+        for (Double[][] a : SplitData) {//filling SplitData with flags before putting values
             for (Double[] b : a) {
                 Arrays.fill(b, -1.01);
             }
         }
 
-        for (int j = 0; j < pr_gui.FNew.length; j++) {
+        for (int j = 0; j < pr_gui.FNew.length; j++) {//the loop will replace nulls to -1 (-1 because of integer tab)
             for (int k = 0; k < correctLength; k++) {
                 if (numberOfClassArray[0][k] == null) {
                     numberOfClassArray[0][k] = -1;
@@ -183,7 +184,7 @@ public class Cross_Validation extends abstractClassifier {
                     numberOfSectorArray[0][k] = -1;
                 }
 
-                if (numberOfClassArray[0][k] == 0) {
+                if (numberOfClassArray[0][k] == 0) {//adding values to Split Data (Remember that values in this array are specially sortioned by k sections
                     SplitData[0][j][k] = kSectionsArray2[j][k];
                 } else if (numberOfClassArray[0][k] == 1) {
                     SplitData[1][j][k] = kSectionsArray2[j][k];
@@ -193,7 +194,7 @@ public class Cross_Validation extends abstractClassifier {
 
         super.SplitData = this.SplitData;
         K_TrainOrTestSet = new Integer[kSections][pr_gui.getClassCount()][correctLength];
-        for (Integer[][] a : K_TrainOrTestSet) {
+        for (Integer[][] a : K_TrainOrTestSet) {//filling with -1 
             for (Integer[] b : a) {
                 Arrays.fill(b, -1);
             }
@@ -201,20 +202,8 @@ public class Cross_Validation extends abstractClassifier {
         numberOfSectorArrayCopy = numberOfSectorArray;
         int lengthOfSectorArray = numberOfSectorArray[0].length / kSections;
         int numberOfLoopSections = 0;
-        for (int x = 0; x < kSections; x++) {
-            if (kSections <= 2) {
-                int sector = lengthOfSectorArray / kSections;
-                if (x == 0) {
-                    for (int c = 0; c < numberOfSectorArray[0].length; c++) {
-                        if (c < sector) {
-                            numberOfSectorArray[0][c] = 1;
-                        } else {
-                            numberOfSectorArray[0][c] = 0;
-                        }
-                    }
-                    numberOfLoopSections = 1;
-                }
-            }
+        for (int x = 0; x < kSections; x++) {//the loop makes the train/test sets 
+
             if (kSections > 2) {
                 int sector = lengthOfSectorArray / kSections;
                 if (x == 0) {
@@ -240,39 +229,41 @@ public class Cross_Validation extends abstractClassifier {
 
             }
 
-            for (int j = 0; j < kSections; j++) {
+            for (int j = 0; j < kSections; j++) {//adding values to the K_TrainOrTestSet
 
                 for (int k = 0; k < correctLength; k++) {
 
                     if (numberOfClassArray[0][k] == 0) {
                         if (numberOfSectorArray[0][k] == j) {
                             K_TrainOrTestSet[x][0][k] = j;
-
+}
                         } else if (numberOfClassArray[0][k] == 1) {
                             if (numberOfSectorArray[0][k] == j) {
                                 K_TrainOrTestSet[x][1][k] = j;
 
                             }
-                        }
+                        
                     }
                 }
+                if (kSections <= 2) {
+                    int sector = lengthOfSectorArray / kSections;
+                   
+                        for (int c = 0; c < numberOfSectorArray[0].length; c++) {
+                            if (c < sector) {
+                                numberOfSectorArray[0][c] = 0;
+                            } else {
+                                numberOfSectorArray[0][c] = 1;
+                            }
+                        }
+                        numberOfLoopSections = 1;
+                    
+                }
             }
-//            if (kSections == 2) {
-//                for (int k = 0; k < correctLength; k++) {
-//                    if (numberOfSectorArray[0][k] == 0) {
-//                        numberOfSectorArray[0][k] = 1;
-//                    } else if (numberOfSectorArray[0][k] == 1) {
-//                        numberOfSectorArray[0][k] = 0;
-//                    }
-//
-//                }
-//            }
 
         }
 
         super.K_TrainOrTestSet = this.K_TrainOrTestSet;
 
-        
     }
 
 }

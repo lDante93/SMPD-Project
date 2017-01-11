@@ -76,17 +76,37 @@ public class bootstrap extends abstractClassifier{
   * @param Dataset input matrix of [features][samples] for all classes
   */
     private void splitClases(double[][] Dataset){
-     SplitData = new Double[pr_gui.getClassCount()][Dataset.length][Dataset[0].length/pr_gui.getClassCount()]; //class/features/samples
+     super.SplitData = new Double[pr_gui.getClassCount()][Dataset.length][determineMaxSamples()]; //class/features/samples
+     
+     for (Double[][] a : super.SplitData) { //fills an entire array with Double -1.01
+            for (Double[] b : a) {
+                Arrays.fill(b, -1.01);
+            }
+     }
+     
      int nLoop = 0;
      for (int i=0;i<pr_gui.getClassCount();i++){ //loop for class
          nLoop++; //current class
          for (int j=0;j<Dataset.length;j++){ //to feature count
-             for (int k=0;k<Dataset[0].length/pr_gui.getClassCount();k++){ //to sample count
-                 SplitData[i][j][k] = Dataset[j][k+(nLoop-1)*Dataset[0].length/pr_gui.getClassCount()];
+             for (int k=0;k<pr_gui.SampleCount[i];k++){ //to sample count
+                 super.SplitData[i][j][k] = Dataset[j][k+(nLoop-1)*pr_gui.SampleCount[0]]; // k+valid now only for two classes
              }
          }
      }
- }   
+ } 
+    /**
+     * Determines maximum samples amount in F or FNew
+     * @return 
+     */
+    private int determineMaxSamples(){
+        int maksSamplesCount =0;
+        for (int i=0; i<pr_gui.SampleCount.length; i++){
+            if(maksSamplesCount < pr_gui.SampleCount[i]){
+                maksSamplesCount = pr_gui.SampleCount[i];
+            }
+        }
+        return maksSamplesCount;
+    }
     /**
      * makes and fills the array K_TrainAndTestSets with flags for train or test sample
      */
@@ -105,9 +125,9 @@ public class bootstrap extends abstractClassifier{
     private Integer[][] updateSets(){
         Integer[][] updatedSets = new Integer[pr_gui.getClassCount()][SplitData[0][0].length];
         for (int i=0;i<pr_gui.getClassCount();i++){
-            updatedSets[i] = updateClass();
+            updatedSets[i] = updateClass(i);
             while (setHasNoTestSamples(updatedSets[i]) ){ //set must have at least one test sample for big sample amounts && updatedSets[i].length>50
-               updatedSets[i] = updateClass(); 
+               updatedSets[i] = updateClass(i); 
             }
         }
         
@@ -132,16 +152,18 @@ public class bootstrap extends abstractClassifier{
      * Updates the train or test set for one class
      * @return TrainOrTestSet for one class
      */
-    private Integer[] updateClass(){
-        Integer[] randomNumb = createRandomNumberSet();
+    private Integer[] updateClass(int classNumber){
+        Integer[] randomNumb = createRandomNumberSet(classNumber);
         return setTrainOrTestSet(randomNumb);     
     }
     
     
-    private Integer[] createRandomNumberSet(){
-        Integer[] randomNumb = new Integer[SplitData[0][0].length];
-        for (int i=0; i<SplitData[0][0].length; i++){
-            randomNumb[i] = generator.nextInt(SplitData[0][0].length);
+    private Integer[] createRandomNumberSet(int classNumber){
+        Integer[] randomNumb = new Integer[determineMaxSamples()];
+        Arrays.fill(randomNumb, -1); //fills array with a flag
+            
+        for (int i=0; i<pr_gui.SampleCount[classNumber]; i++){
+            randomNumb[i] = generator.nextInt(pr_gui.SampleCount[classNumber]);
         }
         return randomNumb;
     }
@@ -154,11 +176,14 @@ public class bootstrap extends abstractClassifier{
         Integer[] TrainOrTestSet = new Integer[randomNumb.length];
         Arrays.fill(TrainOrTestSet, super.TEST_SET);
         for (int i=0; i< randomNumb.length; i++){
-            for (int j=0; j<randomNumb.length; j++){
-                if(i==randomNumb[j]) //if there is such number in randomNumb - it is train set
-                TrainOrTestSet[i]=super.TRAIN_SET;
-                break; //if there is one, it is not necessary to check further
-            }
+            if (!randomNumb[i].equals(-1)){ //if not flag
+               for (int j=0; j<randomNumb.length; j++){
+                if(i==randomNumb[j]) {//if there is such number in randomNumb - it is train set
+                    TrainOrTestSet[i]=super.TRAIN_SET;
+                    break; //if there is one, it is not necessary to check further
+                    }
+                } 
+            }   else TrainOrTestSet[i]=-1;
         }
         return TrainOrTestSet;
     }

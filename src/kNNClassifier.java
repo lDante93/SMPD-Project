@@ -83,7 +83,7 @@ public class kNNClassifier extends abstractClassifier{
         
         //Math.pow(100, 100);
         for (int checkNo = 0; checkNo < SplitData[checkClass][0].length; checkNo++){ //count of samples in class to be checked
-            if (isTrainSet(checkClass,checkNo)&& notCheckingSample(sampClass,checkClass,sampNo,checkNo)){ //if eligible sample
+            if (isTrainSet(checkClass,checkNo)&& notCheckingSample(sampClass,checkClass,sampNo,checkNo)&& !trainOrTestSet[checkClass][checkNo].equals(-1)){ //if eligible sample
                 double[] currFeatureSet = new double[SplitData[0].length]; //set of features for current. checked training sample
                 double[] checkPoint = new double[SplitData[0].length]; //set of features for checked test sample
                 for (int i = 0; i<SplitData[0].length; i++){ //fill arrays with current data
@@ -182,5 +182,6 @@ private int classifyForK(int[] classCount){
     } 
     return classifiedClass;
 }
+
 
 }

@@ -138,7 +138,7 @@ public class PR_GUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
         setMaximizedBounds(new java.awt.Rectangle(0, 0, 100, 100));
-        setMinimumSize(new java.awt.Dimension(1020, 430));
+        setMinimumSize(new java.awt.Dimension(940, 430));
         setPreferredSize(new java.awt.Dimension(300, 300));
         setSize(new java.awt.Dimension(1000, 1000));
         getContentPane().setLayout(null);
@@ -592,7 +592,7 @@ public class PR_GUI extends javax.swing.JFrame {
         );
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(610, 10, 300, 370);
+        jPanel1.setBounds(610, 10, 310, 370);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

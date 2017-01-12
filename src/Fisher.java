@@ -44,7 +44,7 @@ public class Fisher {
                 FNew2[0] = gui.getF()[i];
 
                 FLD = tmp;
-                max_ind = i;
+                max_ind = i+1;
             }
         }
 

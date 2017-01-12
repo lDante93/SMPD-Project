@@ -32,6 +32,7 @@ public class bootstrap extends abstractClassifier{
         
         splitClases(super.Dataset);
         makeTrainAndTestSets();
+        System.out.println("");
     } 
     
     /**

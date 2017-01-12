@@ -126,15 +126,15 @@ public class Fisher {
             mA[i] = mB[i] = 0;
 
         }
-        double[][] xa = new double[vecs.size()][gui.getSampleCount()[0]];//declares an array of dimension as a rows, and sample count as a columns(for example 4 for an A class)
-        double[][] xb = new double[vecs.size()][gui.getSampleCount()[1]];
+        double[][] valuesForClassA = new double[vecs.size()][gui.getSampleCount()[0]];//declares an array of dimension as a rows, and sample count as a columns(for example 4 for an A class)
+        double[][] valuesForClassB = new double[vecs.size()][gui.getSampleCount()[1]];
 
         for (int i = 0, j = 0, k = 0; i < vecs.get(0).length; i++) {
             if (gui.getClassLabels()[i] == 0) {//for class A
 
                 for (int a = 0; a < vecs.size(); a++) {
                     mA[a] += vecs.get(a)[i];//a sum for all of  the vec objects
-                    xa[a][j] = vecs.get(a)[i];//a it only gives the numbers to the arrays of multi-dimensional array
+                    valuesForClassA[a][j] = vecs.get(a)[i];//a it only gives the numbers to the arrays of multi-dimensional array
 
                 }
                 j++;
@@ -142,7 +142,7 @@ public class Fisher {
             } else {//for class B 
                 for (int a = 0; a < vecs.size(); a++) {
                     mB[a] += vecs.get(a)[i];
-                    xb[a][k] = vecs.get(a)[i];
+                    valuesForClassB[a][k] = vecs.get(a)[i];
                 }
                 k++;
             }
@@ -153,33 +153,44 @@ public class Fisher {
             mB[i] /= gui.getSampleCount()[1];
         }
 
-        double[][] avgA = new double[vecs.size()][gui.getSampleCount()[0]];//declares an arrays of rows as vec size, and columns as numbers of sample(for example 2x4)
-        double[][] avgB = new double[vecs.size()][gui.getSampleCount()[1]];
+        double[][] meansForAclass = new double[vecs.size()][gui.getSampleCount()[0]];//declares an arrays of rows as vec size, and columns as numbers of sample(for example 2x4)
+        double[][] meansForBclass = new double[vecs.size()][gui.getSampleCount()[1]];
         for (int i = 0; i < gui.getSampleCount()[0]; i++) {//into columns are put a value of mean(for example for 2 classes avg[0][i] have 1.25, and avg[1][i] have 1,5
             for (int j = 0; j < mA.length; j++) {
-                avgA[j][i] = mA[j];
+                meansForAclass[j][i] = mA[j];
             }
         }
         for (int i = 0; i < gui.getSampleCount()[1]; i++) {
             for (int j = 0; j < mB.length; j++) {
-                avgB[j][i] = mB[j];
+                meansForBclass[j][i] = mB[j];
             }
         }
-        Matrix AvgA = new Matrix(avgA);//converts a two-dimensionarrays into a matrix classes
-        Matrix AvgB = new Matrix(avgB);
-        Matrix Xa = new Matrix(xa);
-        Matrix Xb = new Matrix(xb);
-        Xa = Xa.minus(AvgA);
-        Matrix XaT = Xa.transpose();
-        Matrix Sa = Xa.times(XaT); //Sa = (Xa - AvgA)(Xa - AvgA)T
-        Matrix Sb = Xb.minus(AvgB).times((Xb.minus(AvgB)).transpose());
+        Matrix meanA = new Matrix(meansForAclass);//converts a two-dimensionarrays into a matrix classes that contains the same means
+        Matrix meanB = new Matrix(meansForBclass);
+        
+        Matrix valuesA = new Matrix(valuesForClassA);
+        Matrix valuesB = new Matrix(valuesForClassB);
+        
+        Matrix differenceA = new Matrix(meansForAclass);
+        Matrix differenceB = new Matrix(meansForBclass);
+        
+        differenceA = valuesA.minus(meanA);
+        differenceB = valuesB.minus(meanB);
+        
+        Matrix differenceAT = differenceA.transpose();
+        Matrix Sa = valuesA.times(differenceAT); //Sa = (valuesA - meanA)(valuesA - meanA)T
+        Matrix Sb = differenceB.times((differenceB).transpose());
+        
         detA = Sa.det();
         detB = Sb.det();
+        
         double sum = 0;
         for (int i = 0; i < mA.length; i++) {
             sum += (mA[i] - mB[i]) * (mA[i] - mB[i]);
         }
+        
         diff = Math.sqrt(sum);
+        
         return diff / (detA + detB);
     }
 
@@ -196,11 +207,11 @@ public class Fisher {
         double maxFisher = 0, temp;
         int[] winnerSet = new int[d];
         int[] combinations = new int[d];
-        if (previous == null) {//if there were not computed SFS-fisher before
-            getCombs(gui.getFeatureCount(), d, combinations, d);   //return all pairs to combspairs array, 
+        if (previous == null) {//if there were not computed SFS-fisher before, it will make combspairs of 1 elements 
+            getCombs(gui.getFeatureCount(), d, combinations, d);   
         } else {
             for (int i = 1; i <= gui.getFeatureCount(); i++) {//number of features (columns in .txt)
-                if (!isAlready(i, previous)) {
+                if (!isTheSameNumber(i, previous)) {//making the rest of the combspairs only for the feature that was the best at first checking
                     int[] set = new int[d];
                     System.arraycopy(previous, 0, set, 0, previous.length);
                     set[d - 1] = i;
@@ -237,9 +248,9 @@ public class Fisher {
         return winnerSet;
     }
 
-    private boolean isAlready(int i, int[] array) {
-        for (int element : array) {
-            if (element == i) {
+    private boolean isTheSameNumber(int i, int[] array) {//returns true if the next of the feature is the same
+        for (int x : array) {
+            if (x == i) {
                 return true;
             }
         }

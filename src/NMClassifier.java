@@ -30,7 +30,7 @@ public class NMClassifier extends abstractClassifier{
         int currSampleCount=0;      
         // determine cumulative value of features for checked class and set of features for checked test sample
         for (int checkNo = 0; checkNo < SplitData[sampClass][0].length; checkNo++){ //count of samples in class
-            if (isTrainSet(checkClass,checkNo)&& notCheckingSample(sampClass,checkClass,sampNo,checkNo)){ //if shuld be checked
+            if (isTrainSet(checkClass,checkNo)&& notCheckingSample(sampClass,checkClass,sampNo,checkNo) && !trainOrTestSet[checkClass][checkNo].equals(-1)){ //if train sample shuld be checked (is train sample)
                 currSampleCount++; 
                 for (int i = 0; i<SplitData[0].length; i++){ //to feature count
                     currFeatureSet[i] += SplitData[checkClass][i][checkNo]; //cumulative value of features for checked class
@@ -38,7 +38,7 @@ public class NMClassifier extends abstractClassifier{
                 }
             }
         }
-        // computes the set of features of the class mean and a chenked test sample
+        // computes the set of features of the class mean and a checked test sample
         for (int i = 0; i<SplitData[0].length; i++){  //for all features
                     meanFeatureSet[i] = currFeatureSet[i]/currSampleCount; //generate the mean of features for the tested class
                     checkPoint[i] = SplitData[sampClass][i][sampNo]; //generate sample to be checked [features]

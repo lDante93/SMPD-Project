@@ -24,7 +24,7 @@ public abstract class abstractClassifier {
 
    
 /**
- * counts samples in class
+ * counts TEST samples in class
  * @return 
  */
    public int getMaxSamplesInClass(){
@@ -113,8 +113,8 @@ public abstract class abstractClassifier {
     protected int classifyTestSet(int sampleNo, int checkedClass, int flag){
         int Classification =flag; //class, 
         double classDist = Math.pow(100, 1000); //distance
-        if (!isTrainSet(checkedClass,sampleNo)){ 
-            for(int j=0; j < pr_gui.getClassCount();j++){   //for classes
+        if (!isTrainSet(checkedClass,sampleNo) && !trainOrTestSet[checkedClass][sampleNo].equals(-1)){ 
+            for(int j=0; j < pr_gui.getClassCount();j++){   //for both classes we check a distance for this sample
                 
                 double currClassDist= getClassDistance(sampleNo, j, checkedClass); 
                 if (currClassDist < classDist){
@@ -138,7 +138,7 @@ public abstract class abstractClassifier {
     protected double getClassDistance(int sampNo, int checkClass, int sampClass){
         double minDist = Math.pow(100, 100);
         for (int checkNo = 0; checkNo < SplitData[sampClass][0].length; checkNo++){ //count of samples in class
-            if (isTrainSet(checkClass,checkNo)&& notCheckingSample(sampClass,checkClass,sampNo,checkNo)){
+            if (isTrainSet(checkClass,checkNo) && notCheckingSample(sampClass,checkClass,sampNo,checkNo) && !trainOrTestSet[checkClass][checkNo].equals(-1)){ //!train set out of sample number
                 double[] currFeatureSet = new double[SplitData[0].length];
                 double[] checkPoint = new double[SplitData[0].length];
                 for (int i = 0; i<SplitData[0].length; i++){ //to feature count

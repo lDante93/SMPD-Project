@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -8,6 +9,7 @@ import java.util.ArrayList;
  */
 
 /**
+ * TUTAJ JESZCZE BRAK SUPPORTU DO NIEROWNOMIERNEJ ILOSCI SAMPLES!!!!!!!!!!!!!!!!!!!!!!
  *source for k-means algorithm onmyphd.com/?p=k-means.clustering
  * @author Sokol
  */
@@ -17,14 +19,15 @@ public class kNMClassifier extends abstractClassifier{
         pr_gui = gui;
     } 
     
-    int[][][] centerPoints; //[class][k-center number][feature value]
+    double[][][] centerPoints; //[class][k-center number][feature value]
     int[][] clusterClassification; //[class][classification] classification of respective points in class to clusters
-   boolean isChangeInPointsClassification=false;
+   boolean isChangeInPointsClassification=true;
   
    /**
     * Sets all center points of clusters to their final, optimized positions.
     * 
     */
+   @Override
   protected void setCenterPoints(){
     initializeCenterPoints();
     while (isChangeInPointsClassification){ //stops when no more point changes its flag to cluster
@@ -40,13 +43,13 @@ public class kNMClassifier extends abstractClassifier{
    */
   private void getClosestPoints(){
        for (int i=0; i<pr_gui.getClassCount(); i++){ //for each class
-           for (int j=0; j<SplitData[i][0].length; j++){ //for each point          
+           for (int j=0; j<pr_gui.SampleCount[i] /*SplitData[i][0].length*/; j++){ //for each point of this class         
                     double currDist = 1000000000; //distance from point to current cluster centre
                     int classification=-1;
                    double[] CurrFeatureSet = initializeCurrFeatureSet(i,j); //make set of features of the point
-                   for (int k=0; j<pr_gui.getKSamplesCount(); k++){ //for each cluster centre
+                   for (int k=0; k<pr_gui.getKSamplesCount(); k++){ //for each cluster centre
                         double checkPoint[] = initializeCheckPoint(i,k); //make set of features for one cluster centre
-                        if (currDist < makeEuklides(CurrFeatureSet, checkPoint)){
+                        if (currDist > makeEuklides(CurrFeatureSet, checkPoint)){ //change classification
                             currDist = makeEuklides(CurrFeatureSet, checkPoint);
                             classification=k;
                         }
@@ -81,7 +84,7 @@ public class kNMClassifier extends abstractClassifier{
     */
    private double[] initializeCheckPoint(int currClass, int currClassCentre ) {
        double[] CurrFeatureSet = new double[SplitData[currClass].length];
-        for (int k=0; k<SplitData[currClass].length; k++){ //for each feature
+        for (int k=0; k<SplitData[currClass].length; k++){ //for each feature of this class and class centre
             CurrFeatureSet[k]=centerPoints[currClass][currClassCentre][k];
         }
         return CurrFeatureSet;
@@ -101,19 +104,21 @@ public class kNMClassifier extends abstractClassifier{
    * Updates centerPoints[][][] each time invoked.
    */
   private void setCenterPosition(){
-      centerPoints = new int[pr_gui.getClassCount()][pr_gui.getKSamplesCount()][SplitData[0].length];
+      centerPoints = new double[pr_gui.getClassCount()][pr_gui.getKSamplesCount()][SplitData[0].length];
       for (int i=0; i<pr_gui.getClassCount(); i++){ //for each class
           for (int j=0; j<centerPoints[i].length; j++){ //for each center             
             for (int k=0; k<SplitData[i].length; k++){ //for each feature
                 int clusterSize=0;
-                int clusterCumulValue=0; //cumulative value of center point feature 
-                for (int l=0; l<SplitData[i][k].length; l++){ //for each point
+                double clusterCumulValue=0; //cumulative value of center point feature 
+                for (int l=0; l<pr_gui.SampleCount[i]; l++){ //for each point TU SAMPLE COUNT OF CLASS
                     if (clusterClassification[i][l] == j){
                         clusterSize++;
                         clusterCumulValue+=SplitData[i][k][l];
                     }
                 }
-                if (clusterSize != 0) centerPoints[i][j][k]=clusterCumulValue/clusterSize; //if cluster size zero do nothing
+                if (clusterSize != 0){ // assign cluster position
+                    centerPoints[i][j][k]=(double)clusterCumulValue/clusterSize;
+                } else centerPoints[i][j][k]=Math.pow(100, 1000); //if nothing assigned, give a big value not to interfere with other computations
             }
           }
       }
@@ -123,9 +128,12 @@ public class kNMClassifier extends abstractClassifier{
    * Overrides the clusterClassification each time invoked.
    */
   private void makeRandomPartition(){
-      clusterClassification = new int[pr_gui.getClassCount()][SplitData[0][0].length];
+      clusterClassification = new int[pr_gui.getClassCount()][determineMaxSamples()];
+      for (int o=0; o<pr_gui.getClassCount();o++){
+          Arrays.fill(clusterClassification[o], -1); //gives flag for all samples, which stays for those out of sample count for this class
+      }
       for (int i=0; i<pr_gui.getClassCount(); i++){ //for class number
-          for (int j=0; j<SplitData[i][0].length; j++){ //for samples number
+          for (int j=0; j<pr_gui.SampleCount[i]; j++){ //for samples number in class
               clusterClassification[i][j] = generator.nextInt(pr_gui.getKSamplesCount()); //make random cluster classification
           }
       }
@@ -156,7 +164,19 @@ public class kNMClassifier extends abstractClassifier{
     }    
 
    
-
+/**
+     * Determines maximum samples amount in F or FNew
+     * @return 
+     */
+    private int determineMaxSamples(){
+        int maksSamplesCount =0;
+        for (int i=0; i<pr_gui.SampleCount.length; i++){
+            if(maksSamplesCount < pr_gui.SampleCount[i]){
+                maksSamplesCount = pr_gui.SampleCount[i];
+            }
+        }
+        return maksSamplesCount;
+    } 
 
 
 
